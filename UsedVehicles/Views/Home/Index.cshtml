@@ -3623,6 +3623,10 @@
                     int AllPriceTotal = 0;
                     int AllVehicleCount = 0;
 
+                    decimal AllRetailProfitTotal = 0;
+                    decimal AllTransferProfitTotal = 0;
+
+
                     var AlllistAmountDate = new DateTime(Model.YearId, Model.MonthId, 1);
 
                     <table class="table table-responsive table-bordered table-striped" id="vehicleListing-all" style="font-size:11px;">
@@ -3710,6 +3714,11 @@
                                             backgroundColor = "style=background-color:#ebe4be";
                                             AllTransferCount += 1;
                                             bTransfer = true;
+                                            AllTransferProfitTotal += vehicleProfit;
+                                        }
+                                        else
+                                        {
+                                            AllRetailProfitTotal += vehicleProfit;
                                         }
 
                                     }
@@ -3773,7 +3782,7 @@
                                         <td class="text-center" @backgroundColor>@vehicle.NewListAmount.ToString("C", nfi)</td>
                                         <td class="text-center" @backgroundColor>@DaysAtPrice</td>
                                         
-                                        @if(!bTransfer)
+                                        @if(!bTransfer && !vehicle.IsSold)
                                         {
                                             <td class="text-center" @backgroundColor>@ProfitOrigInvAmount.ToString("C", nfi)</td>
                                             <td class="text-center" @backgroundColor>@ProfitCurrentInvAmount.ToString("C", nfi)</td>
@@ -3807,7 +3816,7 @@
                                     AllNewCostAmountTotal += CurrentInvAmount;
                                     AllWDAmountTotal += WriteDownAmount;
 
-                                    if (!bTransfer)
+                                    if (!bTransfer && !vehicle.IsSold)
                                     {
                                         AllOrigProfitTotal += ProfitOrigInvAmount;
                                         AllWDProfitTotal += ProfitCurrentInvAmount;
@@ -3872,6 +3881,17 @@
                                 <th class="text-center" @AllprofitIndicator>@AllVehicleProfitTotal.ToString("C", nfi)</th>
 
                             </tr>
+                            <tr style="background-color:#d9edf7">
+                                <th class="text-center" colspan="20"></th>
+                                <th class="text-center" colspan="2">Retail:</th>
+                                <th class="text-center" @AlllossIndicator>@AllRetailProfitTotal.ToString("C", nfi)</th>
+                            </tr>
+                            <tr style="background-color:#d9edf7">
+                                <th class="text-center" colspan="20"></th>
+                                <th class="text-center" colspan="2">Transfers:</th>
+                                <th class="text-center" @AlllossIndicator>@AllTransferProfitTotal.ToString("C", nfi)</th>
+                            </tr>
+
                             @{
                                 decimal avgAllInvAmount = 0;
                                 decimal avgAllListAmount = 0;
@@ -3991,6 +4011,9 @@
                     int transfersPriceTotal = 0;
                     int transfersVehicleCount = 0;
 
+                    decimal transfersRetailProfitTotal = 0;
+                    decimal transfersTransferProfitTotal = 0;
+
                     var transferslistAmountDate = new DateTime(Model.YearId, Model.MonthId, 1);
 
                     <table class="table table-responsive table-bordered table-striped" id="vehicleListing-transfers" style="font-size:11px;">
@@ -4078,6 +4101,11 @@
                                             backgroundColor = "style=background-color:#ebe4be";
                                             transfersTransferCount += 1;
                                             bTransfer = true;
+                                            transfersTransferProfitTotal += vehicleProfit;
+                                        }
+                                        else
+                                        {
+                                            transfersRetailProfitTotal += vehicleProfit;
                                         }
 
                                     }
@@ -4141,7 +4169,7 @@
                                         <td class="text-center" @backgroundColor>@vehicle.NewListAmount.ToString("C", nfi)</td>
                                         <td class="text-center" @backgroundColor>@DaysAtPrice</td>
 
-                                        @if (!bTransfer)
+                                        @if (!bTransfer && !vehicle.IsSold)
                                         {
                                             <td class="text-center" @backgroundColor>@ProfitOrigInvAmount.ToString("C", nfi)</td>
                                             <td class="text-center" @backgroundColor>@ProfitCurrentInvAmount.ToString("C", nfi)</td>
@@ -4175,7 +4203,7 @@
                                     transfersNewCostAmountTotal += CurrentInvAmount;
                                     transfersWDAmountTotal += WriteDownAmount;
 
-                                    if (!bTransfer)
+                                    if (!bTransfer && !vehicle.IsSold)
                                     {
                                         transfersOrigProfitTotal += ProfitOrigInvAmount;
                                         transfersWDProfitTotal += ProfitCurrentInvAmount;
@@ -4236,10 +4264,21 @@
                                 <th class="text-center">Sold: @transfersSoldCount</th>
                                 <th class="text-center">Transfers: @transfersTransferCount</th>
                                 <th class="text-center">@transfersSoldAmountTotal.ToString("C", nfi)</th>
-                                <th class="text-center" colspan="2">transfers:</th>
+                                <th class="text-center" colspan="2">All:</th>
                                 <th class="text-center" @transfersprofitIndicator>@transfersVehicleProfitTotal.ToString("C", nfi)</th>
 
                             </tr>
+                            <tr style="background-color:#d9edf7">
+                                <th class="text-center" colspan="20"></th>
+                                <th class="text-center" colspan="2">Retail:</th>
+                                <th class="text-center" @transferslossIndicator>@transfersRetailProfitTotal.ToString("C", nfi)</th>
+                            </tr>
+                            <tr style="background-color:#d9edf7">
+                                <th class="text-center" colspan="20"></th>
+                                <th class="text-center" colspan="2">Transfers:</th>
+                                <th class="text-center" @transferslossIndicator>@transfersTransferProfitTotal.ToString("C", nfi)</th>
+                            </tr>
+
                             @{
                                 decimal avgtransfersInvAmount = 0;
                                 decimal avgtransfersListAmount = 0;
@@ -4361,6 +4400,9 @@
                             int StorePriceTotal = 0;
                             int StoreVehicleCount = 0;
 
+                            decimal StoreRetailProfitTotal = 0;
+                            decimal StoreTransferProfitTotal = 0;
+
                             var listAmountDate = new DateTime(Model.YearId, Model.MonthId, 1);
 
                             <table class="table table-responsive table-bordered table-striped" id="vehicleListing-@location" style="font-size:11px;">
@@ -4448,7 +4490,14 @@
                                                     backgroundColor = "style=background-color:#ebe4be";
                                                     StoreTransferCount += 1;
                                                     bTransfer = true;
+                                                    StoreTransferProfitTotal += vehicleProfit;
                                                 }
+                                                else
+                                                {
+                                                    StoreRetailProfitTotal += vehicleProfit;
+                                                }
+
+
 
                                             }
 
@@ -4510,7 +4559,7 @@
 
                                                 <td class="text-center" @backgroundColor>@vehicle.NewListAmount.ToString("C", nfi)</td>
                                                 <td class="text-center" @backgroundColor>@DaysAtPrice</td>
-                                                @if (!bTransfer)
+                                                @if (!bTransfer && !vehicle.IsSold)
                                                 {
                                                     <td class="text-center" @backgroundColor>@ProfitOrigInvAmount.ToString("C", nfi)</td>
                                                     <td class="text-center" @backgroundColor>@ProfitCurrentInvAmount.ToString("C", nfi)</td>
@@ -4543,7 +4592,7 @@
                                             StoreNewCostAmountTotal += CurrentInvAmount;
                                             StoreWDAmountTotal += WriteDownAmount;
 
-                                            if (!bTransfer)
+                                            if (!bTransfer && !vehicle.IsSold)
                                             {
                                                 StoreOrigProfitTotal += ProfitOrigInvAmount;
                                                 StoreWDProfitTotal += ProfitCurrentInvAmount;
@@ -4635,6 +4684,17 @@
                                         avgPriceDays = (StorePriceTotal / StoreVehicleCount);
 
                                     }
+                                    <tr style="background-color:#d9edf7">
+                                        <th class="text-center" colspan="20"></th>
+                                        <th class="text-center" colspan="2">Retail:</th>
+                                        <th class="text-center" @lossIndicator>@StoreRetailProfitTotal.ToString("C", nfi)</th>
+                                    </tr>
+                                    <tr style="background-color:#d9edf7">
+                                        <th class="text-center" colspan="20"></th>
+                                        <th class="text-center" colspan="2">Transfers:</th>
+                                        <th class="text-center" @lossIndicator>@StoreTransferProfitTotal.ToString("C", nfi)</th>
+                                    </tr>
+
                                     <tr style="background-color:#d9edf7">
                                         <th class="text-center">Averages</th>
                                         <th class="text-center"></th>
