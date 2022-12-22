@@ -1,0 +1,125 @@
+﻿@model UsedVehicles.Models.VehicleNoteModel
+
+@{
+    ViewBag.Title = "Update Vehicle Notes";
+    Layout = null;
+    var applicationPath = Request.ApplicationPath;
+
+    if (applicationPath == "/")
+    {
+        applicationPath = "";
+    }
+
+    System.Globalization.NumberFormatInfo nfi = new System.Globalization.CultureInfo("en-US", false).NumberFormat;
+    nfi.CurrencyDecimalDigits = 2;
+    nfi.PercentDecimalDigits = 1;
+    nfi.CurrencySymbol = "";
+    nfi.PercentSymbol = "";
+
+}
+
+
+    <div id="interested" class="module clearfloats">
+    <h3>Vehicle Notes</h3>
+
+    @using (Html.BeginForm("VehicleNotes", "Home", FormMethod.Post, new { id = "UpdateVehicleNotes" }))
+    {
+        if (Model.VehicleInformation != null)
+        {
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-bordered table-striped" style="font-size:12px">
+                        <thead>
+                            <tr style="background-color:#d9edf7">
+                                <th class="text-center">Loc</th>
+
+                                <th class="text-center">Stock #</th>
+
+                                <th class="text-center">Year</th>
+                                <th class="text-center">Make</th>
+                                <th class="text-center">Model</th>
+                                <th class="text-center">VIN</th>
+                                <th class="text-center">Days Inv</th>
+
+                                <th class="text-center">Inv Status</th>
+
+                                <th class="text-center">Memo</th>
+                                
+                            </tr>
+                        </thead>
+                        @{
+
+                        }
+                        <tbody>
+                            <tr>
+                                <td class="text-center">@Model.VehicleInformation.Location</td>
+                                <td class="text-center">@Model.VehicleInformation.StockNumber</td>
+
+                                <td class="text-center">@Model.VehicleInformation.ModelYear</td>
+                                <td class="text-center">@Model.VehicleInformation.Make</td>
+                                <td class="text-center">@Model.VehicleInformation.Model</td>
+                                <td class="text-center">@Model.VehicleInformation.VIN</td>
+                                <td class="text-center">@Model.VehicleInformation.DaysInventory</td>
+
+                                <td class="text-center">@Model.VehicleInformation.Status</td>
+
+                                <td class="text-center">@Model.VehicleInformation.Memo2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+                                }
+            <div class="row">
+
+                @Html.HiddenFor(x => x.VehicleNotes.Id)
+                @Html.HiddenFor(x => x.VehicleNotes.VIN)
+                @Html.HiddenFor(x => x.VehicleNotes.InventoryStatus)
+                @Html.HiddenFor(x => x.VehicleNotes.StockNumber)
+                @Html.HiddenFor(x => x.VehicleNotes.Location)
+
+                @if (Model.VehicleInformation.Status == 8 || Model.VehicleInformation.Status == 9)
+                {
+                <div class="col-sm-6">
+                    <h4>Lot Location</h4>
+                    @Html.TextAreaFor(x => x.VehicleNotes.LotLocation, new { style = "-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;max-width:none;width: 100%;height:100px; " })
+                </div>
+                }
+                <div class="col-sm-6">
+                    <h4>Notes</h4>
+                    @Html.TextAreaFor(x => x.VehicleNotes.Notes, new { style = "-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;max-width:none;width: 100%;height:100px; " })
+                </div>
+            </div>
+            if (Model.VehicleInformation.Status == 8 || Model.VehicleInformation.Status == 9)
+            {
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h4>Vehicle Sold</h4>
+                        @Html.CheckBoxFor(x => x.VehicleNotes.VehicleSold, new { }) <strong>Vehicle was sold</strong><br/>
+                        <h4>Sold Date</h4>
+                        @Html.TextBoxFor(x => x.VehicleNotes.VehicleSoldDate, new { @class="form-control" })
+                    </div>
+                    <div class="col-sm-6">
+                        <h4>Sold Location and Notes</h4>
+                        @Html.TextAreaFor(x => x.VehicleNotes.VehicleSoldNotes, new { style = "-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;max-width:none;width: 100%;height:100px; " })
+                    </div>
+                </div>
+            }
+            <div class="row text-center">
+                <div class="col-sm-12">
+                    @if(Model.VehicleNotes.UpdateUser != null && Model.VehicleNotes.UpdateUser != "")
+                    {
+                        @:<h4>Last Updated: @Model.VehicleNotes.UpdateDate by @Model.VehicleNotes.UpdateUser</h4>
+                    }
+                </div>
+            </div>
+
+
+                            }
+    </div>
+
+
+
+<script type="text/javascript">
+
+</script>

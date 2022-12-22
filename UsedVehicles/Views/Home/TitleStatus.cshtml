@@ -1,0 +1,278 @@
+﻿@model UsedVehicles.Models.UsedInventoryStatusModel
+
+@{
+    ViewBag.Title = "Fitzmall Used Vehicle Title Status";
+
+    System.Globalization.NumberFormatInfo nfi = new System.Globalization.CultureInfo("en-US", false).NumberFormat;
+    nfi.CurrencyDecimalDigits = 0;
+    nfi.PercentDecimalDigits = 1;
+    nfi.PercentPositivePattern = 1;
+
+    var applicationPath = Request.ApplicationPath;
+
+    if (applicationPath == "/")
+    {
+        applicationPath = "";
+    }
+
+}
+
+
+<style type="text/css">
+
+    .container{
+        max-width:100%
+    }
+</style>
+
+<div class="jumbotron">
+    <h1>Fitzmall Used Inventory Title Status</h1>
+    <div class="row">
+        <div class="col-sm-3">
+            <h3>Select a Location and Days:</h3>
+        </div>
+        <div class="col-sm-2">
+            <h3>Inventory Status:</h3>
+        </div>
+        <div class="col-sm-2">
+            <h3>Title Status:</h3>
+        </div>
+    </div>
+    @using (Html.BeginForm())
+    {
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-3">
+                        @Html.DropDownListFor(n => n.Location, new SelectList(UsedVehicles.Business.Enums.Locations, "LocationId", "Name"), new { @class = "form-control form-inline" })
+                    </div>
+                    <div class="col-sm-2">
+                        <select class="form-control" id="InventoryStatus" name="InventoryStatus" multiple>
+                            <option value="ALL">All Inventory Status</option>
+                            <option value="1" @(Model.InventoryStatus.Contains("1") ? "selected" : "")>In Stock (1)</option>
+                            <option value="2" @(Model.InventoryStatus.Contains("2") ? "selected" : "")>Deal Pending (2)</option>
+                            <option value="3" @(Model.InventoryStatus.Contains("3") ? "selected" : "")>Demo (3)</option>
+                            <option value="4" @(Model.InventoryStatus.Contains("4") ? "selected" : "")>Ex Service Loaner (4)</option>
+                            <option value="5" @(Model.InventoryStatus.Contains("5") ? "selected" : "")>Sold, Not Delivered (5)</option>
+                            <option value="8" @(Model.InventoryStatus.Contains("8") ? "selected" : "")>Wholesale (8)</option>
+                            <option value="9" @(Model.InventoryStatus.Contains("9") ? "selected" : "")>Wholesale At Auction (9)</option>
+                            <option value="21" @(Model.InventoryStatus.Contains("21") ? "selected" : "")> Nextcar (21)</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <select class="form-control" id="TitleStatus" name="TitleStatus" multiple>
+                            <option value="ALL">All Title Status</option>
+                            <option value="0" @(Model.TitleStatus.Contains("0") ? "selected" : "")>No Status </option>
+                            <option value="1" @(Model.TitleStatus.Contains("1") ? "selected" : "")>Clear Title</option>
+                            <option value="2" @(Model.TitleStatus.Contains("2") ? "selected" : "")>Title Due From Bank</option>
+                            <option value="3" @(Model.TitleStatus.Contains("3") ? "selected" : "")>Title Due From Customer</option>
+                            <option value="5" @(Model.TitleStatus.Contains("5") ? "selected" : "")>Title Due From InterCo</option>
+                            <option value="6" @(Model.TitleStatus.Contains("6") ? "selected" : "")>Title Due From Auction</option>
+                            <option value="4" @(Model.TitleStatus.Contains("4") ? "selected" : "")>Lien Due From Customer</option>
+                            <option value="7" @(Model.TitleStatus.Contains("7") ? "selected" : "")>Lien Due From Bank</option>
+                            <option value="8" @(Model.TitleStatus.Contains("8") ? "selected" : "")>Odometer Due From Customer</option>
+                            <option value="9" @(Model.TitleStatus.Contains("9") ? "selected" : "")>POA Due From Customer</option>
+                            <option value="10" @(Model.TitleStatus.Contains("10") ? "selected" : "")>Payoff Auth Due Customer</option>
+                            <option value="11" @(Model.TitleStatus.Contains("11") ? "selected" : "")>Waiting Out/ST Title</option>
+                            <option value="12" @(Model.TitleStatus.Contains("12") ? "selected" : "")>Other</option>
+                            <option value="13" @(Model.TitleStatus.Contains("13") ? "selected" : "")>Duplicate Title Applied For</option>
+                            <option value="14" @(Model.TitleStatus.Contains("14") ? "selected" : "")>No Title - Dispose of Vehicle</option>
+                            <option value="15" @(Model.TitleStatus.Contains("15") ? "selected" : "")>E-Title</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        @Html.RadioButtonFor(n => n.ReportFilter, "ALL", new { @class = "input-radio" }) All
+                        @Html.RadioButtonFor(n => n.ReportFilter, "CPO", new { @style = "margin-left:25px;" }) CPO
+                        @Html.RadioButtonFor(n => n.ReportFilter, "NEXTCAR", new { @style = "margin-left:25px;" }) Nextcar
+                        @Html.RadioButtonFor(n => n.ReportFilter, "HANDYMAN", new { @style = "margin-left:25px;" }) Handyman
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-9">
+                        <button class="btn btn-primary" id="SubmitButton" type="submit" value="submit" name="Submit">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+
+@if (Model.AllUsedVehicles != null)
+{
+    <div class="row" style="margin-top:10px;">
+        <div class="col-md-12">
+            <h2>Used Vehicles for @Model.Location</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+    <table class="table table-responsive table-bordered table-striped" id="vehicleListing-summary" style="font-size:11px;">
+        <thead>
+            <tr style="background-color:#d9edf7">
+                <th class="text-center">Location</th>
+                <th class="text-center">Stock #</th>
+                <th class="text-center">VIN (last 6)</th>
+                <th class="text-center">Inv Status</th>
+                <th class="text-center">4008 Days in Inv</th>
+                <th class="text-center">Make</th>
+                <th class="text-center">Model</th>
+                <th class="text-center">Year</th>
+                <th class="text-center">Cost Amount</th>
+                @*<th class="text-center">Current List Amount</th>
+                <th class="text-center">Days At<br/>Currrent Amount</th>
+                <th class="text-center">Prev List Amount</th>
+                <th class="text-center">Amount Changed</th>
+                <th class="text-center">Date Changed</th>*@
+                <th class="text-center">Title Status</th>
+                <th class="text-center">Last Updated</th>
+                <th class="text-center">Last Updated By</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var vehicle in Model.AllUsedVehicles)
+            {
+                //var bPriceChange = false;
+                //var daysDifference = 0;
+                //decimal amountDifference = 0;
+
+                //var priceChanges = Model.VehiclePriceChanges.Find(x => x.StockNumber == vehicle.StockNumber);
+
+                //if (priceChanges != null && priceChanges.ListAmount != 0)
+                //{
+                //    bPriceChange = true;
+                //    daysDifference = vehicle.DaysInventory - priceChanges.DaysInventory;
+                //    amountDifference = vehicle.ListAmount - priceChanges.ListAmount;
+                //}
+
+                //var backgroundColor = "";
+                //var noChangeColor = "";
+
+                //if(daysDifference >= 30 && daysDifference < 60)
+                //{
+                //    backgroundColor = "style=background-color:#fafd26";
+                //}
+                //else if(daysDifference >= 60)
+                //{
+                //    backgroundColor = "style=background-color:#fd3826";
+                //}
+
+                //if (vehicle.Days4008 >= 30 && vehicle.Days4008 < 60)
+                //{
+                //    noChangeColor = "style=background-color:#fafd26";
+                //}
+                //else if (vehicle.Days4008 >= 60)
+                //{
+                //    noChangeColor = "style=background-color:#fd3826";
+                //}
+
+
+                //if (daysDifference < 0)
+                //{
+                //    daysDifference = (int)(DateTime.Now - priceChanges.PriceDate.AddDays(-1)).TotalDays;
+                //}
+
+                var titleLink = "http://jjfserver/SalesCommission/Reports/UpdateTitleDue?vin=" + vehicle.VIN;//.Substring(vehicle.VIN.Length - 6);
+                if(vehicle.TitleStatus == "No Status")
+                {
+                    titleLink = "http://jjfserver/SalesCommission/Reports/AddTitleDue?vin=" + vehicle.VIN;//.Substring(vehicle.VIN.Length - 6);
+                }
+
+                <tr>
+                    <th class="text-center">@vehicle.Location</th>
+                    <td class="text-center">@vehicle.StockNumber</td>
+                    
+                    @if (vehicle.VIN.Length > 6)
+                    {
+                        <td class="text-center">@vehicle.VIN.Substring(vehicle.VIN.Length - 6)</td>
+                    }
+                    else
+                    {
+                        <td class="text-center">@vehicle.VIN</td>
+                    }
+                    <td class="text-center">@vehicle.Status</td>
+                    <td class="text-center">@vehicle.Days4008</td>
+                    <td class="text-center">@vehicle.Make</td>
+                    <td class="text-center">@vehicle.Model</td>
+                    <td class="text-center">@vehicle.ModelYear</td>
+                    <td class="text-center">@vehicle.CostAmount.ToString("C", nfi)</td>
+                    @*<td class="text-center">@vehicle.ListAmount.ToString("C",nfi)</td>
+
+                    @if (bPriceChange)
+                    {
+                        <td class="text-center" @backgroundColor>@daysDifference</td>
+                        <td class="text-center">@priceChanges.ListAmount.ToString("C",nfi)</td>
+                        <td class="text-center">@amountDifference.ToString("C", nfi)</td>
+                        <td class="text-center">@priceChanges.PriceDate.AddDays(-1).ToShortDateString()</td>
+                    }
+                    else
+                    {
+                        <td class="text-center" @noChangeColor>@vehicle.Days4008</td>
+                        <td class="text-center"></td>
+                        <td class="text-center"></td>
+                        <td class="text-center"></td>
+                    }*@
+                    <td class="text-center"><a href="@titleLink" target="_blank">@vehicle.TitleStatus</a></td>
+
+                    @if (@vehicle.TitleUpdatedDate.ToShortDateString() != "1/1/0001")
+                    {
+                        <td class="text-center">@vehicle.TitleUpdatedDate.ToShortDateString()</td>
+                    }
+                    else
+                    {
+                        <td class="text-center"></td>
+                    }
+                    <td class="text-center">@vehicle.TitleUpdatedUser</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+
+        </tfoot>
+    </table>
+
+
+
+
+    </div>
+    </div>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#vehicleListing-summary').DataTable({
+              searching: true,
+              dom: 'Bfrtip',
+              pageLength: -1,
+              buttons: [
+                  {
+                      extend: 'copyHtml5', footer: true,
+                  },
+                  {
+                      extend: 'excelHtml5', footer: true,
+                  },
+                  {
+                      extend: 'pdfHtml5', footer: true,
+                      orientation: 'landscape'
+                  },
+                  {
+                      extend: 'print', footer: true,
+                      orientation: 'landscape'
+                  }
+              ],
+              columnDefs: [
+                { type: 'any-number', targets: [2,3,4,7,8] },
+                { type: 'date', targets: [10] },
+              ]
+
+            });
+
+      });
+
+    </script>
+
+}
