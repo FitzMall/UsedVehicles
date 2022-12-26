@@ -3655,9 +3655,9 @@
                                 <th>Profit WD Inv Amt</th>
 
                                 <th>Status</th>
-                                <th>Customer</th>
+                                <th>Customer Name or Transferred Store</th>
                                 <th>Sell Price</th>
-                                <th>Sold Loc</th>
+                                @*<th>Sold Loc</th>*@
                                 <th>Sold Date</th>
                                 <th>Profit</th>
                             </tr>
@@ -3751,11 +3751,12 @@
 
                                     ProfitOrigInvAmount = vehicle.NewListAmount - vehicle.CostAmount;
                                     CurrentInvAmount = vehicle.CurrentInvAmount;
+                                    ProfitCurrentInvAmount = vehicle.NewListAmount - CurrentInvAmount;
 
                                     if (vehicle.CurrentInvAmount > 0 && vehicle.CurrentInvAmount != vehicle.CostAmount)
                                     {
 
-                                        ProfitCurrentInvAmount = vehicle.NewListAmount - CurrentInvAmount;
+                                        //ProfitCurrentInvAmount = vehicle.NewListAmount - CurrentInvAmount;
                                         WriteDownAmount = ((vehicle.CostAmount - CurrentInvAmount) * -1);
                                         WriteDownPercent = ((1 - (CurrentInvAmount / vehicle.CostAmount)));
                                         AllWDCount += 1;
@@ -3798,7 +3799,7 @@
                                             <td class="text-center" @backgroundColor>@vehicle.Status (SOLD)</td>
                                                     <td class="text-center" @backgroundColor>@vehicle.CustomerName</td>
                                                     <td class="text-center" @backgroundColor>@vehicle.SellPrice.ToString("C", nfi)</td>
-                                                    <td class="text-center" @backgroundColor>@vehicle.SoldLocation</td>
+                                                    @*<td class="text-center" @backgroundColor>@vehicle.SoldLocation</td>*@
                                                     <td class="text-center" @backgroundColor>@vehicle.SoldDate.ToShortDateString()</td>
                                                     <td class="text-center" @profitbackgroundColor>@vehicleProfit.ToString("C", nfi)</td>
                                         }
@@ -3807,7 +3808,7 @@
                                             <td class="text-center" @backgroundColor>@vehicle.Status</td>
                                                     <td class="text-center" @backgroundColor></td>
                                                     <td class="text-center" @backgroundColor></td>
-                                                    <td class="text-center" @backgroundColor></td>
+                                                    @*<td class="text-center" @backgroundColor></td>*@
                                                     <td class="text-center" @backgroundColor></td>
                                                     <td class="text-center" @profitbackgroundColor></td>
                                         }
@@ -3877,18 +3878,18 @@
                                 <th class="text-center">Sold: @AllSoldCount</th>
                                 <th class="text-center">Transfers: @AllTransferCount</th>
                                 <th class="text-center">@AllSoldAmountTotal.ToString("C", nfi)</th>
-                                <th class="text-center" colspan="2">All:</th>
+                                <th class="text-center" >All:</th>
                                 <th class="text-center" @AllprofitIndicator>@AllVehicleProfitTotal.ToString("C", nfi)</th>
 
                             </tr>
                             <tr style="background-color:#d9edf7">
                                 <th class="text-center" colspan="20"></th>
-                                <th class="text-center" colspan="2">Retail:</th>
+                                <th class="text-center" >Retail:</th>
                                 <th class="text-center" @AlllossIndicator>@AllRetailProfitTotal.ToString("C", nfi)</th>
                             </tr>
                             <tr style="background-color:#d9edf7">
                                 <th class="text-center" colspan="20"></th>
-                                <th class="text-center" colspan="2">Transfers:</th>
+                                <th class="text-center" >Transfers:</th>
                                 <th class="text-center" @AlllossIndicator>@AllTransferProfitTotal.ToString("C", nfi)</th>
                             </tr>
 
@@ -3907,7 +3908,7 @@
 
                                 avgAllInvAmount = (AllCostAmountTotal / AllVehicleCount);
                                 avgAllListAmount = (AllListAmountTotal / AllVehicleCount);
-                                avgAllNewInvAmount = (AllNewCostAmountTotal / AllVehicleCount);
+                                avgAllNewInvAmount = (AllNewCostAmountTotal / (AllVehicleCount - AllSoldCount));
                                 avgAllNewListAmount = (AllNewListAmountTotal / AllVehicleCount);
                                 if (AllWDCount > 0)
                                 {
@@ -3941,8 +3942,9 @@
                                 <th class="text-center"></th>
                                 <th class="text-center"></th>
                                 <th class="text-center"></th>
-                                <th class="text-center" colspan="2">Loss:</th>
-                                <th class="text-center" @AlllossIndicator>@AllVehicleLossTotal.ToString("C", nfi)</th>
+                                <th class="text-center" colspan="2"></th>
+                                @*<th class="text-center" colspan="2">Loss:</th>
+                                <th class="text-center" @AlllossIndicator>@AllVehicleLossTotal.ToString("C", nfi)</th>*@
 
                             </tr>
                         </tfoot>
@@ -4042,9 +4044,9 @@
                                 <th>Profit WD Inv Amt</th>
 
                                 <th>Status</th>
-                                <th>Customer</th>
+                                <th>Customer Name or Transferred Store</th>
                                 <th>Sell Price</th>
-                                <th>Sold Loc</th>
+                                @*<th>Sold Loc</th>*@
                                 <th>Sold Date</th>
                                 <th>Profit</th>
                             </tr>
@@ -4137,19 +4139,21 @@
                                     //If(vehicle.CurrentInvAmount
 
                                     ProfitOrigInvAmount = vehicle.NewListAmount - vehicle.CostAmount;
+                                    ProfitCurrentInvAmount = vehicle.NewListAmount - CurrentInvAmount;
+
                                     CurrentInvAmount = vehicle.CurrentInvAmount;
 
                                     if (vehicle.CurrentInvAmount > 0 && vehicle.CurrentInvAmount != vehicle.CostAmount)
                                     {
 
-                                        ProfitCurrentInvAmount = vehicle.NewListAmount - CurrentInvAmount;
+                                        //ProfitCurrentInvAmount = vehicle.NewListAmount - CurrentInvAmount;
                                         WriteDownAmount = ((vehicle.CostAmount - CurrentInvAmount) * -1);
                                         WriteDownPercent = ((1 - (CurrentInvAmount / vehicle.CostAmount)));
                                         transfersWDCount += 1;
                                     }
                                     <tr>
                                         <td class="text-center" @backgroundColor>@vehicle.Location</td>
-                                        <td class="text-center" @backgroundColor><a href="https://www.fitzmtransfers.com/Inventory/Detail/@vehicle.XrefId" target="_blank">@vehicle.StockNumber</a></td>
+                                        <td class="text-center" @backgroundColor><a href="https://www.fitzmall.com/Inventory/Detail/@vehicle.XrefId" target="_blank">@vehicle.StockNumber</a></td>
                                         <td class="text-center" @backgroundColor>@vehicle.ModelYear</td>
                                         <td class="text-center" @backgroundColor>@vehicle.Make</td>
                                         <td class="text-center" @backgroundColor>@vehicle.Model</td>
@@ -4185,7 +4189,7 @@
                                             <td class="text-center" @backgroundColor>@vehicle.Status (SOLD)</td>
                                             <td class="text-center" @backgroundColor>@vehicle.CustomerName</td>
                                                     <td class="text-center" @backgroundColor>@vehicle.SellPrice.ToString("C", nfi)</td>
-                                                    <td class="text-center" @backgroundColor>@vehicle.SoldLocation</td>
+                                                    @*<td class="text-center" @backgroundColor>@vehicle.SoldLocation</td>*@
                                                     <td class="text-center" @backgroundColor>@vehicle.SoldDate.ToShortDateString()</td>
                                                     <td class="text-center" @profitbackgroundColor>@vehicleProfit.ToString("C", nfi)</td>
                                         }
@@ -4194,7 +4198,7 @@
                                             <td class="text-center" @backgroundColor>@vehicle.Status</td>
                                             <td class="text-center" @backgroundColor></td>
                                                     <td class="text-center" @backgroundColor></td>
-                                                    <td class="text-center" @backgroundColor></td>
+                                                    @*<td class="text-center" @backgroundColor></td>*@
                                                     <td class="text-center" @backgroundColor></td>
                                                     <td class="text-center" @profitbackgroundColor></td>
                                         }
@@ -4264,18 +4268,18 @@
                                 <th class="text-center">Sold: @transfersSoldCount</th>
                                 <th class="text-center">Transfers: @transfersTransferCount</th>
                                 <th class="text-center">@transfersSoldAmountTotal.ToString("C", nfi)</th>
-                                <th class="text-center" colspan="2">All:</th>
+                                <th class="text-center" >All:</th>
                                 <th class="text-center" @transfersprofitIndicator>@transfersVehicleProfitTotal.ToString("C", nfi)</th>
 
                             </tr>
                             <tr style="background-color:#d9edf7">
                                 <th class="text-center" colspan="20"></th>
-                                <th class="text-center" colspan="2">Retail:</th>
+                                <th class="text-center" >Retail:</th>
                                 <th class="text-center" @transferslossIndicator>@transfersRetailProfitTotal.ToString("C", nfi)</th>
                             </tr>
                             <tr style="background-color:#d9edf7">
                                 <th class="text-center" colspan="20"></th>
-                                <th class="text-center" colspan="2">Transfers:</th>
+                                <th class="text-center" >Transfers:</th>
                                 <th class="text-center" @transferslossIndicator>@transfersTransferProfitTotal.ToString("C", nfi)</th>
                             </tr>
 
@@ -4294,7 +4298,11 @@
 
                                 avgtransfersInvAmount = (transfersCostAmountTotal / transfersVehicleCount);
                                 avgtransfersListAmount = (transfersListAmountTotal / transfersVehicleCount);
-                                avgtransfersNewInvAmount = (transfersNewCostAmountTotal / transfersVehicleCount);
+                                if ((transfersVehicleCount - transfersSoldCount) > 0)
+                                {
+                                    avgtransfersNewInvAmount = (transfersNewCostAmountTotal / (transfersVehicleCount - transfersSoldCount));
+                                }
+                                
                                 avgtransfersNewListAmount = (transfersNewListAmountTotal / transfersVehicleCount);
                                 if (transfersWDCount > 0)
                                 {
@@ -4328,8 +4336,9 @@
                                 <th class="text-center"></th>
                                 <th class="text-center"></th>
                                 <th class="text-center"></th>
-                                <th class="text-center" colspan="2">Loss:</th>
-                                <th class="text-center" @transferslossIndicator>@transfersVehicleLossTotal.ToString("C", nfi)</th>
+                                <th class="text-center" colspan="2"></th>
+                                @*<th class="text-center" colspan="2">Loss:</th>
+                                <th class="text-center" @transferslossIndicator>@transfersVehicleLossTotal.ToString("C", nfi)</th>*@
 
                             </tr>
                         </tfoot>
@@ -4431,9 +4440,9 @@
                                         <th>Profit WD Inv Amt</th>
                                                                                 
                                         <th>Status</th>
-                                        <th>Customer</th>
+                                        <th>Customer Name or Transferred Store</th>
                                         <th>Sell Price</th>
-                                        <th>Sold Loc</th>
+                                        @*<th>Sold Loc</th>*@
                                         <th>Sold Date</th>
                                         <th>Profit</th>
                                     </tr>
@@ -4529,11 +4538,12 @@
 
                                             ProfitOrigInvAmount = vehicle.NewListAmount - vehicle.CostAmount;
                                             CurrentInvAmount = vehicle.CurrentInvAmount;
+                                            ProfitCurrentInvAmount = vehicle.NewListAmount - CurrentInvAmount;
 
                                             if (vehicle.CurrentInvAmount > 0 && vehicle.CurrentInvAmount != vehicle.CostAmount)
                                             {
 
-                                                ProfitCurrentInvAmount = vehicle.NewListAmount - CurrentInvAmount;
+                                                //ProfitCurrentInvAmount = vehicle.NewListAmount - CurrentInvAmount;
                                                 WriteDownAmount = ((vehicle.CostAmount - CurrentInvAmount) * -1);
                                                 WriteDownPercent = ((1 - (CurrentInvAmount / vehicle.CostAmount)) );
                                                 StoreWDCount += 1;
@@ -4574,7 +4584,7 @@
                                                     <td class="text-center" @backgroundColor>@vehicle.Status (SOLD)</td>
                                                     <td class="text-center" @backgroundColor>@vehicle.CustomerName</td>
                                                     <td class="text-center" @backgroundColor>@vehicle.SellPrice.ToString("C", nfi)</td>
-                                                    <td class="text-center" @backgroundColor>@vehicle.SoldLocation</td>
+                                                    @*<td class="text-center" @backgroundColor>@vehicle.SoldLocation</td>*@
                                                     <td class="text-center" @backgroundColor>@vehicle.SoldDate.ToShortDateString()</td>
                                                     <td class="text-center" @profitbackgroundColor>@vehicleProfit.ToString("C", nfi)</td>
                                                 }
@@ -4583,7 +4593,7 @@
                                                     <td class="text-center" @backgroundColor>@vehicle.Status</td>
                                                     <td class="text-center" @backgroundColor></td>
                                                     <td class="text-center" @backgroundColor></td>
-                                                    <td class="text-center" @backgroundColor></td>
+                                                    @*<td class="text-center" @backgroundColor></td>*@
                                                     <td class="text-center" @backgroundColor></td>
                                                     <td class="text-center" @profitbackgroundColor></td>
                                                 }
@@ -4652,46 +4662,46 @@
                                         <th class="text-center">Sold: @StoreSoldCount</th>
                                         <th class="text-center">Transfers: @StoreTransferCount</th>
                                         <th class="text-center">@StoreSoldAmountTotal.ToString("C", nfi)</th>
-                                        <th class="text-center" colspan="2">All:</th>
+                                        <th class="text-center">All:</th>
                                         <th class="text-center" @profitIndicator>@StoreVehicleProfitTotal.ToString("C", nfi)</th>
 
                                     </tr>
                                     @{
-                                        decimal avgInvAmount = 0;
-                                        decimal avgListAmount = 0;
-                                        decimal avgNewInvAmount = 0;
-                                        decimal avgNewListAmount = 0;
+                                                decimal avgInvAmount = 0;
+                                                decimal avgListAmount = 0;
+                                                decimal avgNewInvAmount = 0;
+                                                decimal avgNewListAmount = 0;
 
-                                        decimal avgWDAmount = 0;
-                                        decimal avgWDPercent = 0;
-                                        decimal avgPriceDays = 0;
+                                                decimal avgWDAmount = 0;
+                                                decimal avgWDPercent = 0;
+                                                decimal avgPriceDays = 0;
 
-                                        decimal avgOrigProfit = 0;
-                                        decimal avgWDProfit = 0;
+                                                decimal avgOrigProfit = 0;
+                                                decimal avgWDProfit = 0;
 
-                                        avgInvAmount = (StoreCostAmountTotal / StoreVehicleCount);
-                                        avgListAmount = (StoreListAmountTotal / StoreVehicleCount);
-                                        avgNewInvAmount = (StoreNewCostAmountTotal / StoreVehicleCount);
-                                        avgNewListAmount = (StoreNewListAmountTotal / StoreVehicleCount);
-                                        if (StoreWDCount > 0)
-                                        {
-                                            avgWDAmount = (StoreWDAmountTotal / StoreWDCount);
-                                            avgWDPercent = (StoreWDPercentTotal / StoreWDCount);
-                                        }
-                                        avgOrigProfit = (StoreOrigProfitTotal / StoreVehicleCount);
-                                        avgWDProfit = (StoreWDProfitTotal / StoreVehicleCount);
+                                                avgInvAmount = (StoreCostAmountTotal / StoreVehicleCount);
+                                                avgListAmount = (StoreListAmountTotal / StoreVehicleCount);
+                                                avgNewInvAmount = (StoreNewCostAmountTotal / (StoreVehicleCount - StoreSoldCount));
+                                                avgNewListAmount = (StoreNewListAmountTotal / StoreVehicleCount);
+                                                if (StoreWDCount > 0)
+                                                {
+                                                    avgWDAmount = (StoreWDAmountTotal / StoreWDCount);
+                                                    avgWDPercent = (StoreWDPercentTotal / StoreWDCount);
+                                                }
+                                                avgOrigProfit = (StoreOrigProfitTotal / StoreVehicleCount);
+                                                avgWDProfit = (StoreWDProfitTotal / StoreVehicleCount);
 
-                                        avgPriceDays = (StorePriceTotal / StoreVehicleCount);
+                                                avgPriceDays = (StorePriceTotal / StoreVehicleCount);
 
-                                    }
+                                            }
                                     <tr style="background-color:#d9edf7">
                                         <th class="text-center" colspan="20"></th>
-                                        <th class="text-center" colspan="2">Retail:</th>
+                                        <th class="text-center" >Retail:</th>
                                         <th class="text-center" @lossIndicator>@StoreRetailProfitTotal.ToString("C", nfi)</th>
                                     </tr>
                                     <tr style="background-color:#d9edf7">
                                         <th class="text-center" colspan="20"></th>
-                                        <th class="text-center" colspan="2">Transfers:</th>
+                                        <th class="text-center" >Transfers:</th>
                                         <th class="text-center" @lossIndicator>@StoreTransferProfitTotal.ToString("C", nfi)</th>
                                     </tr>
 
@@ -4716,8 +4726,9 @@
                                         <th class="text-center"></th>
                                         <th class="text-center"></th>
                                         <th class="text-center"></th>
-                                        <th class="text-center" colspan="2">Loss:</th>
-                                        <th class="text-center" @lossIndicator>@StoreVehicleLossTotal.ToString("C", nfi)</th>
+                                        <th class="text-center" colspan="2"></th>
+                                        @*<th class="text-center" colspan="2">Loss:</th>
+                                        <th class="text-center" @lossIndicator>@StoreVehicleLossTotal.ToString("C", nfi)</th>*@
 
                                     </tr>
                                 </tfoot>
