@@ -108,6 +108,7 @@ namespace UsedVehicles.Models
         public string CustomerName { get; set; }
         public string DealNumber { get; set; }
         public decimal CurrentInvAmount { get; set; }
+        public decimal TotalPVR { get; set; }
     }
 
     public class OpenRecalls
@@ -128,6 +129,12 @@ namespace UsedVehicles.Models
         public DateTime deal_date { get; set; }
         public string category { get; set; }
         public string daysinstk { get; set; }
+        public decimal FinanceIncome { get; set; } 
+        public decimal ServiceContract { get; set; }
+        public decimal GAP { get; set; }
+        public decimal MaintenanceContract { get; set; }
+        public decimal DealGross { get; set; }
+        public string DealKey { get; set; }
     }
 
 

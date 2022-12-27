@@ -3659,6 +3659,7 @@
                                 <th>Sell Price</th>
                                 @*<th>Sold Loc</th>*@
                                 <th>Sold Date</th>
+                                <th>Total PVR</th>
                                 <th>Profit</th>
                             </tr>
                         </thead>
@@ -3796,11 +3797,13 @@
 
                                         @if (vehicle.IsSold)
                                         {
-                                            <td class="text-center" @backgroundColor>@vehicle.Status (SOLD)</td>
+                                            <td class="text-center" @backgroundColor>@vehicle.Status <a href="http://jjfserver/SalesCommission/Sales/DealDetail/@vehicle.DealNumber" target="_blank">(SOLD)</a></td>
                                                     <td class="text-center" @backgroundColor>@vehicle.CustomerName</td>
                                                     <td class="text-center" @backgroundColor>@vehicle.SellPrice.ToString("C", nfi)</td>
                                                     @*<td class="text-center" @backgroundColor>@vehicle.SoldLocation</td>*@
                                                     <td class="text-center" @backgroundColor>@vehicle.SoldDate.ToShortDateString()</td>
+                                                    <td class="text-center" @backgroundColor>@vehicle.TotalPVR.ToString("C", nfi)</td>
+
                                                     <td class="text-center" @profitbackgroundColor>@vehicleProfit.ToString("C", nfi)</td>
                                         }
                                         else
@@ -3809,6 +3812,7 @@
                                                     <td class="text-center" @backgroundColor></td>
                                                     <td class="text-center" @backgroundColor></td>
                                                     @*<td class="text-center" @backgroundColor></td>*@
+                                                    <td class="text-center" @backgroundColor></td>
                                                     <td class="text-center" @backgroundColor></td>
                                                     <td class="text-center" @profitbackgroundColor></td>
                                         }
@@ -3878,18 +3882,18 @@
                                 <th class="text-center">Sold: @AllSoldCount</th>
                                 <th class="text-center">Transfers: @AllTransferCount</th>
                                 <th class="text-center">@AllSoldAmountTotal.ToString("C", nfi)</th>
-                                <th class="text-center" >All:</th>
+                                <th class="text-center" colspan="2">All:</th>
                                 <th class="text-center" @AllprofitIndicator>@AllVehicleProfitTotal.ToString("C", nfi)</th>
 
                             </tr>
                             <tr style="background-color:#d9edf7">
                                 <th class="text-center" colspan="20"></th>
-                                <th class="text-center" >Retail:</th>
+                                <th class="text-center" colspan="2">Retail:</th>
                                 <th class="text-center" @AlllossIndicator>@AllRetailProfitTotal.ToString("C", nfi)</th>
                             </tr>
                             <tr style="background-color:#d9edf7">
                                 <th class="text-center" colspan="20"></th>
-                                <th class="text-center" >Transfers:</th>
+                                <th class="text-center" colspan="2">Transfers:</th>
                                 <th class="text-center" @AlllossIndicator>@AllTransferProfitTotal.ToString("C", nfi)</th>
                             </tr>
 
@@ -3942,7 +3946,7 @@
                                 <th class="text-center"></th>
                                 <th class="text-center"></th>
                                 <th class="text-center"></th>
-                                <th class="text-center" colspan="2"></th>
+                                <th class="text-center" colspan="3"></th>
                                 @*<th class="text-center" colspan="2">Loss:</th>
                                 <th class="text-center" @AlllossIndicator>@AllVehicleLossTotal.ToString("C", nfi)</th>*@
 
@@ -4048,6 +4052,7 @@
                                 <th>Sell Price</th>
                                 @*<th>Sold Loc</th>*@
                                 <th>Sold Date</th>
+                                <th>Total PVR</th>
                                 <th>Profit</th>
                             </tr>
                         </thead>
@@ -4088,19 +4093,19 @@
                                         transfersSoldCount += 1;
                                         transfersSoldAmountTotal += vehicle.SellPrice;
                                         transfersVehicleProfitTotal += vehicleProfit;
-                                        backgroundColor = "style=background-color:#b7e1cd";
-                                        profitbackgroundColor = "style=background-color:#b7e1cd";
+                                        //backgroundColor = "style=background-color:#b7e1cd";
+                                        //profitbackgroundColor = "style=background-color:#b7e1cd";
 
                                         if (vehicleProfit < 0)
                                         {
                                             transfersVehicleLossTotal += vehicleProfit;
-                                            backgroundColor = "style=background-color:#f4c7c3";
-                                            profitbackgroundColor = "style=background-color:#f4c7c3";
+                                            //backgroundColor = "style=background-color:#f4c7c3";
+                                            //profitbackgroundColor = "style=background-color:#f4c7c3";
                                         }
 
                                         if (vehicle.CustomerName != null && vehicle.CustomerName.StartsWith("Transfer"))
                                         {
-                                            backgroundColor = "style=background-color:#ebe4be";
+                                            //backgroundColor = "style=background-color:#ebe4be";
                                             transfersTransferCount += 1;
                                             bTransfer = true;
                                             transfersTransferProfitTotal += vehicleProfit;
@@ -4186,11 +4191,12 @@
 
                                         @if (vehicle.IsSold)
                                         {
-                                            <td class="text-center" @backgroundColor>@vehicle.Status (SOLD)</td>
+                                            <td class="text-center" @backgroundColor>@vehicle.Status <a href="http://jjfserver/SalesCommission/Sales/DealDetail/@vehicle.DealNumber" target="_blank">(SOLD)</a></td>
                                             <td class="text-center" @backgroundColor>@vehicle.CustomerName</td>
                                                     <td class="text-center" @backgroundColor>@vehicle.SellPrice.ToString("C", nfi)</td>
                                                     @*<td class="text-center" @backgroundColor>@vehicle.SoldLocation</td>*@
                                                     <td class="text-center" @backgroundColor>@vehicle.SoldDate.ToShortDateString()</td>
+                                                    <td class="text-center" @backgroundColor>@vehicle.TotalPVR.ToString("C", nfi)</td>
                                                     <td class="text-center" @profitbackgroundColor>@vehicleProfit.ToString("C", nfi)</td>
                                         }
                                         else
@@ -4199,6 +4205,7 @@
                                             <td class="text-center" @backgroundColor></td>
                                                     <td class="text-center" @backgroundColor></td>
                                                     @*<td class="text-center" @backgroundColor></td>*@
+                                                    <td class="text-center" @backgroundColor></td>
                                                     <td class="text-center" @backgroundColor></td>
                                                     <td class="text-center" @profitbackgroundColor></td>
                                         }
@@ -4268,18 +4275,18 @@
                                 <th class="text-center">Sold: @transfersSoldCount</th>
                                 <th class="text-center">Transfers: @transfersTransferCount</th>
                                 <th class="text-center">@transfersSoldAmountTotal.ToString("C", nfi)</th>
-                                <th class="text-center" >All:</th>
+                                <th class="text-center" colspan="2">All:</th>
                                 <th class="text-center" @transfersprofitIndicator>@transfersVehicleProfitTotal.ToString("C", nfi)</th>
 
                             </tr>
                             <tr style="background-color:#d9edf7">
                                 <th class="text-center" colspan="20"></th>
-                                <th class="text-center" >Retail:</th>
+                                <th class="text-center" colspan="2">Retail:</th>
                                 <th class="text-center" @transferslossIndicator>@transfersRetailProfitTotal.ToString("C", nfi)</th>
                             </tr>
                             <tr style="background-color:#d9edf7">
                                 <th class="text-center" colspan="20"></th>
-                                <th class="text-center" >Transfers:</th>
+                                <th class="text-center" colspan="2">Transfers:</th>
                                 <th class="text-center" @transferslossIndicator>@transfersTransferProfitTotal.ToString("C", nfi)</th>
                             </tr>
 
@@ -4336,7 +4343,7 @@
                                 <th class="text-center"></th>
                                 <th class="text-center"></th>
                                 <th class="text-center"></th>
-                                <th class="text-center" colspan="2"></th>
+                                <th class="text-center" colspan="3"></th>
                                 @*<th class="text-center" colspan="2">Loss:</th>
                                 <th class="text-center" @transferslossIndicator>@transfersVehicleLossTotal.ToString("C", nfi)</th>*@
 
@@ -4444,6 +4451,7 @@
                                         <th>Sell Price</th>
                                         @*<th>Sold Loc</th>*@
                                         <th>Sold Date</th>
+                                        <th>Total PVR</th>
                                         <th>Profit</th>
                                     </tr>
                                 </thead>
@@ -4581,11 +4589,12 @@
                                                 }
                                                 @if (vehicle.IsSold)
                             {
-                                                    <td class="text-center" @backgroundColor>@vehicle.Status (SOLD)</td>
+                                                    <td class="text-center" @backgroundColor>@vehicle.Status <a href="http://jjfserver/SalesCommission/Sales/DealDetail/@vehicle.DealNumber" target="_blank">(SOLD)</a></td>
                                                     <td class="text-center" @backgroundColor>@vehicle.CustomerName</td>
                                                     <td class="text-center" @backgroundColor>@vehicle.SellPrice.ToString("C", nfi)</td>
                                                     @*<td class="text-center" @backgroundColor>@vehicle.SoldLocation</td>*@
                                                     <td class="text-center" @backgroundColor>@vehicle.SoldDate.ToShortDateString()</td>
+                                                    <td class="text-center" @backgroundColor>@vehicle.TotalPVR.ToString("C", nfi)</td>
                                                     <td class="text-center" @profitbackgroundColor>@vehicleProfit.ToString("C", nfi)</td>
                                                 }
                                                 else
@@ -4594,6 +4603,7 @@
                                                     <td class="text-center" @backgroundColor></td>
                                                     <td class="text-center" @backgroundColor></td>
                                                     @*<td class="text-center" @backgroundColor></td>*@
+                                                    <td class="text-center" @backgroundColor></td>
                                                     <td class="text-center" @backgroundColor></td>
                                                     <td class="text-center" @profitbackgroundColor></td>
                                                 }
@@ -4662,7 +4672,7 @@
                                         <th class="text-center">Sold: @StoreSoldCount</th>
                                         <th class="text-center">Transfers: @StoreTransferCount</th>
                                         <th class="text-center">@StoreSoldAmountTotal.ToString("C", nfi)</th>
-                                        <th class="text-center">All:</th>
+                                        <th class="text-center" colspan="2">All:</th>
                                         <th class="text-center" @profitIndicator>@StoreVehicleProfitTotal.ToString("C", nfi)</th>
 
                                     </tr>
@@ -4696,12 +4706,12 @@
                                             }
                                     <tr style="background-color:#d9edf7">
                                         <th class="text-center" colspan="20"></th>
-                                        <th class="text-center" >Retail:</th>
+                                        <th class="text-center" colspan="2">Retail:</th>
                                         <th class="text-center" @lossIndicator>@StoreRetailProfitTotal.ToString("C", nfi)</th>
                                     </tr>
                                     <tr style="background-color:#d9edf7">
                                         <th class="text-center" colspan="20"></th>
-                                        <th class="text-center" >Transfers:</th>
+                                        <th class="text-center" colspan="2">Transfers:</th>
                                         <th class="text-center" @lossIndicator>@StoreTransferProfitTotal.ToString("C", nfi)</th>
                                     </tr>
 
@@ -4726,7 +4736,7 @@
                                         <th class="text-center"></th>
                                         <th class="text-center"></th>
                                         <th class="text-center"></th>
-                                        <th class="text-center" colspan="2"></th>
+                                        <th class="text-center" colspan="3"></th>
                                         @*<th class="text-center" colspan="2">Loss:</th>
                                         <th class="text-center" @lossIndicator>@StoreVehicleLossTotal.ToString("C", nfi)</th>*@
 
