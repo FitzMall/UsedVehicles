@@ -11,6 +11,7 @@ namespace UsedVehicles.Models
         public int YearId { get; set; }
         public string ReportFilter { get; set; }
         public List<UsedVehicle> UsedVehicles { get; set; }
+        public List<UsedVehicle> TransferredVehicles { get; set; }
         public List<UsedVehicle> RepoVehicles { get; set; }
         public List<UsedVehicle> AllUsedVehicles { get; set; }
         public List<UsedVehicle> AuctionVehicles { get; set; }
@@ -75,6 +76,7 @@ namespace UsedVehicles.Models
         public int YearId { get; set; }
         public DateTime InventoryDate { get; set; }
         public string Location { get; set; }
+        public string CurrentLocation { get; set; }
         public string StockNumber { get; set; }
         public string XrefId { get; set; }
         public string ModelYear { get; set; }

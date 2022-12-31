@@ -47,9 +47,22 @@ namespace UsedVehicles.Controllers
                 {
                     vehicle.NewListAmount = liveVehicle.ListAmount;
                     vehicle.CurrentInvAmount = liveVehicle.CostAmount;
-                }
+                    vehicle.CurrentLocation = liveVehicle.Location;
 
+                    if(vehicle.CurrentLocation != vehicle.Location)
+                    {
+                        vehicle.Days4008 = liveVehicle.Days4008;
+                    }
+
+                }
+                else
+                {
+                    vehicle.CurrentInvAmount = vehicle.CostAmount;
+                }
             }
+
+            usedVehicleModel.TransferredVehicles = usedVehicleModel.UsedVehicles.FindAll(x => x.CustomerName != null && x.CustomerName.StartsWith("Transfer"));
+            //see if Transferred Vehicles have been sold?
 
 
             return View(usedVehicleModel);
@@ -139,9 +152,22 @@ namespace UsedVehicles.Controllers
                 {
                     vehicle.NewListAmount = liveVehicle.ListAmount;
                     vehicle.CurrentInvAmount = liveVehicle.CostAmount;
-                }
+                    vehicle.CurrentLocation = liveVehicle.Location;
 
+                    if (vehicle.CurrentLocation != vehicle.Location)
+                    {
+                        vehicle.Days4008 = liveVehicle.Days4008;
+                    }
+
+                }
+                else
+                {
+                    vehicle.CurrentInvAmount = vehicle.CostAmount;
+                }
             }
+
+            usedVehicleModel.TransferredVehicles = usedVehicleModel.UsedVehicles.FindAll(x => x.CustomerName != null && x.CustomerName.StartsWith("Transfer"));
+            //see if Transferred Vehicles have been sold?
 
 
             return View(usedVehicleModel);

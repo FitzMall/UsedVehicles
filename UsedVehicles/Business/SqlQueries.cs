@@ -480,7 +480,7 @@ namespace UsedVehicles.Business
                 customer = "Transfer - " + vehicle.b_last;
             }
 
-            var totalPVR = vehicle.DealGross + vehicle.FinanceIncome + vehicle.ServiceContract + vehicle.GAP + vehicle.MaintenanceContract;
+            var totalPVR = vehicle.DealGross;// + vehicle.FinanceIncome + vehicle.ServiceContract + vehicle.GAP + vehicle.MaintenanceContract;
             var sqlUpdate = "UPDATE [REYDATA].[dbo].AgedUnits set IsSold = 1, SellPrice = @SellPrice, SoldLocation = @Location, SoldDate = @SoldDate, UpdateDate = GETDATE(), CustomerName = @CustomerName, TotalPVR = @TotalPVR, DealNumber = @DealKey where [Month] = @ReportMonth and [Year] = @ReportYear and StockNumber = @StockNumber";
 
             var updated = SqlMapperUtil.InsertUpdateOrDeleteSql(sqlUpdate, new { SellPrice = vehicle.sell_price, Location = vehicle.loc, SoldDate = vehicle.deal_date, ReportMonth = monthId, ReportYear = yearId, StockNumber = vehicle.stk_no, CustomerName = customer, TotalPVR = totalPVR, DealKey = vehicle.DealKey }, "ReynoldsData");
