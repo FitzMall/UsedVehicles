@@ -3984,20 +3984,24 @@
                                 decimal avgAllOrigProfit = 0;
                                 decimal avgAllWDProfit = 0;
 
-                                avgAllInvAmount = (AllCostAmountTotal / AllVehicleCount);
-                                avgAllListAmount = (AllListAmountTotal / AllVehicleCount);
-                                avgAllNewInvAmount = (AllNewCostAmountTotal / (AllVehicleCount - AllSoldCount));
-                                avgAllNewListAmount = (AllNewListAmountTotal / AllVehicleCount);
                                 if (AllWDCount > 0)
                                 {
                                     avgAllWDAmount = (AllWDAmountTotal / AllWDCount);
                                     avgAllWDPercent = (AllWDPercentTotal / AllWDCount);
                                 }
-                                avgAllOrigProfit = (AllOrigProfitTotal / AllVehicleCount);
-                                avgAllWDProfit = (AllWDProfitTotal / AllVehicleCount);
 
-                                avgAllPriceDays = (AllPriceTotal / AllVehicleCount);
+                                if (AllVehicleCount > 0)
+                                {
+                                    avgAllOrigProfit = (AllOrigProfitTotal / AllVehicleCount);
+                                    avgAllWDProfit = (AllWDProfitTotal / AllVehicleCount);
 
+                                    avgAllPriceDays = (AllPriceTotal / AllVehicleCount);
+                                    avgAllInvAmount = (AllCostAmountTotal / AllVehicleCount);
+                                    avgAllListAmount = (AllListAmountTotal / AllVehicleCount);
+                                    avgAllNewInvAmount = (AllNewCostAmountTotal / (AllVehicleCount - AllSoldCount));
+                                    avgAllNewListAmount = (AllNewListAmountTotal / AllVehicleCount);
+
+                                }
                             }
                             <tr style="background-color:#d9edf7">
                                 <th class="text-center">Averages</th>
@@ -4151,6 +4155,9 @@
 
                                 foreach (var vehicle in transfersVehicles)
                                 {
+                                    //This is for Transfers only to see if they have been sold...
+
+                                    var soldTransfer = Model.SoldVehicles.Find(x => x.StockNumber.Trim() == vehicle.StockNumber);
 
                                     var diffToMarket = vehicle.NewListAmount - vehicle.CostAmount;
                                     transfersDaysTotal += vehicle.DaysInventory;
@@ -4175,46 +4182,53 @@
                                     var backgroundColor = "";
                                     var profitbackgroundColor = "";
                                     var bTransfer = false;
+                                    var bSold = false;
 
-                                    if (vehicle.IsSold)
+                                    if(soldTransfer != null)
                                     {
-                                        vehicleProfit = vehicle.SellPrice - vehicle.CostAmount;
-                                        vehicleProfitWD = vehicle.SellPrice - vehicle.CurrentInvAmount;
+                                        bSold = true;
+                                    }
+
+                                    if (bSold)
+                                    {
+                                        vehicle.CurrentLocation = soldTransfer.SoldLocation;
+                                        vehicleProfit = soldTransfer.SellPrice - soldTransfer.CostAmount;
+                                        vehicleProfitWD = soldTransfer.SellPrice - vehicle.CurrentInvAmount;
 
                                         transfersVehicleProfitTotal += vehicleProfit;
                                         transfersVehicleWDProfitTotal += vehicleProfitWD;
-                                        transfersVehicleSLProfitTotal += vehicle.TotalPVR;
+                                        transfersVehicleSLProfitTotal += soldTransfer.TotalPVR;
 
-                                        //backgroundColor = "style=background-color:#b7e1cd";
-                                        //profitbackgroundColor = "style=background-color:#b7e1cd";
+                                        backgroundColor = "style=background-color:#b7e1cd";
+                                        profitbackgroundColor = "style=background-color:#b7e1cd";
 
                                         if (vehicleProfit < 0)
                                         {
                                             transfersVehicleLossTotal += vehicleProfit;
-                                            //backgroundColor = "style=background-color:#f4c7c3";
-                                            //profitbackgroundColor = "style=background-color:#f4c7c3";
+                                            backgroundColor = "style=background-color:#f4c7c3";
+                                            profitbackgroundColor = "style=background-color:#f4c7c3";
                                         }
 
-                                        if (vehicle.CustomerName != null && vehicle.CustomerName.StartsWith("Transfer"))
+                                        if (soldTransfer.CustomerName != null && soldTransfer.CustomerName.StartsWith("Transfer"))
                                         {
-                                            //backgroundColor = "style=background-color:#ebe4be";
+                                            backgroundColor = "style=background-color:#ebe4be";
                                             transfersTransferCount += 1;
                                             bTransfer = true;
                                             transfersTransferProfitTotal += vehicleProfit;
                                             transfersTransferWDProfitTotal += vehicleProfitWD;
-                                            transfersTransferSLProfitTotal += vehicle.TotalPVR;
+                                            transfersTransferSLProfitTotal += soldTransfer.TotalPVR;
 
-                                            TransferTotalTransferPVR += vehicle.TotalPVR;
+                                            TransferTotalTransferPVR += soldTransfer.TotalPVR;
                                         }
                                         else
                                         {
                                             transfersSoldCount += 1;
                                             transfersSoldAmountTotal += vehicle.SellPrice;
                                             transfersRetailProfitTotal += vehicleProfit;
-                                            TransferTotalRetailPVR += vehicle.TotalPVR;
+                                            TransferTotalRetailPVR += soldTransfer.TotalPVR;
 
                                             transfersRetailWDProfitTotal += vehicleProfitWD;
-                                            transfersRetailSLProfitTotal += vehicle.TotalPVR;
+                                            transfersRetailSLProfitTotal += soldTransfer.TotalPVR;
 
                                         }
 
@@ -4282,7 +4296,7 @@
                                         <td class="text-center" @backgroundColor>@vehicle.NewListAmount.ToString("C", nfi)</td>
                                         <td class="text-center" @backgroundColor>@DaysAtPrice</td>
 
-                                        @if (!bTransfer && !vehicle.IsSold)
+                                        @if (!bTransfer && !bSold)
                                         {
                                             <td class="text-center" @backgroundColor>@ProfitOrigInvAmount.ToString("C", nfi)</td>
                                             <td class="text-center" @backgroundColor>@ProfitCurrentInvAmount.ToString("C", nfi)</td>
@@ -4293,13 +4307,13 @@
                                             <td class="text-center" @backgroundColor></td>
                                         }
 
-                                        @if (vehicle.IsSold)
+                                        @if (bSold)
                                         {
-                                            <td class="text-center" @backgroundColor>@vehicle.Status <a href="http://jjfserver/SalesCommission/Sales/DealDetail/@vehicle.DealNumber" target="_blank">(SOLD)</a></td>
-                                            <td class="text-center" @backgroundColor>@vehicle.CustomerName</td>
-                                                    <td class="text-center" @backgroundColor>@vehicle.SellPrice.ToString("C", nfi)</td>
+                                            <td class="text-center" @backgroundColor>@soldTransfer.Status <a href="http://jjfserver/SalesCommission/Sales/DealDetail/@vehicle.DealNumber" target="_blank">(SOLD)</a></td>
+                                            <td class="text-center" @backgroundColor>@soldTransfer.CustomerName</td>
+                                                    <td class="text-center" @backgroundColor>@soldTransfer.SellPrice.ToString("C", nfi)</td>
                                                     @*<td class="text-center" @backgroundColor>@vehicle.SoldLocation</td>*@
-                                                    <td class="text-center" @backgroundColor>@vehicle.SoldDate.ToShortDateString()</td>
+                                                    <td class="text-center" @backgroundColor>@soldTransfer.SoldDate.ToShortDateString()</td>
                                                     @*<td class="text-center" @backgroundColor>@vehicle.TotalPVR.ToString("C", nfi)</td>*@
                                                     <td class="text-center" @profitbackgroundColor>@vehicleProfit.ToString("C", nfi)</td>
                                                     <td class="text-center" @profitbackgroundColor>@vehicleProfitWD.ToString("C", nfi)</td>
@@ -4456,24 +4470,29 @@
                                 decimal avgtransfersOrigProfit = 0;
                                 decimal avgtransfersWDProfit = 0;
 
-                                avgtransfersInvAmount = (transfersCostAmountTotal / transfersVehicleCount);
-                                avgtransfersListAmount = (transfersListAmountTotal / transfersVehicleCount);
+
                                 if ((transfersVehicleCount - transfersSoldCount) > 0)
                                 {
                                     avgtransfersNewInvAmount = (transfersNewCostAmountTotal / (transfersVehicleCount - transfersSoldCount));
                                 }
-                                
-                                avgtransfersNewListAmount = (transfersNewListAmountTotal / transfersVehicleCount);
+
                                 if (transfersWDCount > 0)
                                 {
                                     avgtransfersWDAmount = (transfersWDAmountTotal / transfersWDCount);
                                     avgtransfersWDPercent = (transfersWDPercentTotal / transfersWDCount);
                                 }
-                                avgtransfersOrigProfit = (transfersOrigProfitTotal / transfersVehicleCount);
-                                avgtransfersWDProfit = (transfersWDProfitTotal / transfersVehicleCount);
 
-                                avgtransfersPriceDays = (transfersPriceTotal / transfersVehicleCount);
+                                if (transfersVehicleCount > 0)
+                                {
+                                    avgtransfersInvAmount = (transfersCostAmountTotal / transfersVehicleCount);
+                                    avgtransfersListAmount = (transfersListAmountTotal / transfersVehicleCount);
+                                    avgtransfersNewListAmount = (transfersNewListAmountTotal / transfersVehicleCount);
 
+                                    avgtransfersOrigProfit = (transfersOrigProfitTotal / transfersVehicleCount);
+                                    avgtransfersWDProfit = (transfersWDProfitTotal / transfersVehicleCount);
+
+                                    avgtransfersPriceDays = (transfersPriceTotal / transfersVehicleCount);
+                                }
                             }
                             <tr style="background-color:#d9edf7">
                                 <th class="text-center" colspan="2">Averages</th>
@@ -4901,33 +4920,37 @@
                                         <th class="text-center" @profitIndicator>@StoreVehicleSLProfitTotal.ToString("C", nfi)<br />@avgStoreVehicleSLProfit.ToString("C", nfi)</th>
                                     </tr>
                                     @{
-                                                decimal avgInvAmount = 0;
-                                                decimal avgListAmount = 0;
-                                                decimal avgNewInvAmount = 0;
-                                                decimal avgNewListAmount = 0;
+                                        decimal avgInvAmount = 0;
+                                        decimal avgListAmount = 0;
+                                        decimal avgNewInvAmount = 0;
+                                        decimal avgNewListAmount = 0;
 
-                                                decimal avgWDAmount = 0;
-                                                decimal avgWDPercent = 0;
-                                                decimal avgPriceDays = 0;
+                                        decimal avgWDAmount = 0;
+                                        decimal avgWDPercent = 0;
+                                        decimal avgPriceDays = 0;
 
-                                                decimal avgOrigProfit = 0;
-                                                decimal avgWDProfit = 0;
+                                        decimal avgOrigProfit = 0;
+                                        decimal avgWDProfit = 0;
 
-                                                avgInvAmount = (StoreCostAmountTotal / StoreVehicleCount);
-                                                avgListAmount = (StoreListAmountTotal / StoreVehicleCount);
-                                                avgNewInvAmount = (StoreNewCostAmountTotal / (StoreVehicleCount - StoreSoldCount));
-                                                avgNewListAmount = (StoreNewListAmountTotal / StoreVehicleCount);
-                                                if (StoreWDCount > 0)
-                                                {
-                                                    avgWDAmount = (StoreWDAmountTotal / StoreWDCount);
-                                                    avgWDPercent = (StoreWDPercentTotal / StoreWDCount);
-                                                }
-                                                avgOrigProfit = (StoreOrigProfitTotal / StoreVehicleCount);
-                                                avgWDProfit = (StoreWDProfitTotal / StoreVehicleCount);
 
-                                                avgPriceDays = (StorePriceTotal / StoreVehicleCount);
+                                        if (StoreWDCount > 0)
+                                        {
+                                            avgWDAmount = (StoreWDAmountTotal / StoreWDCount);
+                                            avgWDPercent = (StoreWDPercentTotal / StoreWDCount);
+                                        }
 
-                                            }
+                                        if (StoreVehicleCount > 0)
+                                        {
+                                            avgInvAmount = (StoreCostAmountTotal / StoreVehicleCount);
+                                            avgListAmount = (StoreListAmountTotal / StoreVehicleCount);
+                                            avgNewInvAmount = (StoreNewCostAmountTotal / (StoreVehicleCount - StoreSoldCount));
+                                            avgNewListAmount = (StoreNewListAmountTotal / StoreVehicleCount);
+                                            avgOrigProfit = (StoreOrigProfitTotal / StoreVehicleCount);
+                                            avgWDProfit = (StoreWDProfitTotal / StoreVehicleCount);
+
+                                            avgPriceDays = (StorePriceTotal / StoreVehicleCount);
+                                        }
+                                    }
                                     <tr style="background-color:#d9edf7">
                                         <th class="text-center" colspan="20"></th>
                                         <th class="text-center">Retail:</th>

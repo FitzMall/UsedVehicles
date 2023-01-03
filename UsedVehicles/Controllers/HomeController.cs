@@ -63,7 +63,7 @@ namespace UsedVehicles.Controllers
 
             usedVehicleModel.TransferredVehicles = usedVehicleModel.UsedVehicles.FindAll(x => x.CustomerName != null && x.CustomerName.StartsWith("Transfer"));
             //see if Transferred Vehicles have been sold?
-
+            usedVehicleModel.SoldVehicles = SqlQueries.GetSoldAndTransferredUnits(usedVehicleModel.MonthId, usedVehicleModel.YearId);
 
             return View(usedVehicleModel);
         }
@@ -168,6 +168,7 @@ namespace UsedVehicles.Controllers
 
             usedVehicleModel.TransferredVehicles = usedVehicleModel.UsedVehicles.FindAll(x => x.CustomerName != null && x.CustomerName.StartsWith("Transfer"));
             //see if Transferred Vehicles have been sold?
+            usedVehicleModel.SoldVehicles = SqlQueries.GetSoldAndTransferredUnits(usedVehicleModel.MonthId, usedVehicleModel.YearId);
 
 
             return View(usedVehicleModel);

@@ -12,6 +12,7 @@ namespace UsedVehicles.Models
         public string ReportFilter { get; set; }
         public List<UsedVehicle> UsedVehicles { get; set; }
         public List<UsedVehicle> TransferredVehicles { get; set; }
+        public List<UsedVehicle> SoldVehicles { get; set; }
         public List<UsedVehicle> RepoVehicles { get; set; }
         public List<UsedVehicle> AllUsedVehicles { get; set; }
         public List<UsedVehicle> AuctionVehicles { get; set; }
