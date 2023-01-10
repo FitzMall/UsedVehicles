@@ -334,7 +334,7 @@ namespace UsedVehicles.Business
             var sqlGet = @" Select A.*,  O.OptCode as Certified from  [REYDATA].[dbo].[AgedUnits] A
                     left JOIN FITZWAY.dbo.OptionDataFM O on A.XrefId = O.XREFID and (OPTTYPE = 'FEA' and OPTCODE in (
                       'F906','F907','F908','F909','F910','F911','F912','F913','F916','F917','F918','F922','F923'
-                      ))  where Month = @ReportMonth and Year = @ReportYear";
+                      ))  where Month = @ReportMonth and Year = @ReportYear and (A.Status <> 3 and A.Status <> 8 and A.Status <> 9 and A.Status <> 15 and A.Status <> 20) ";
 
 
             var usedVehicles = SqlMapperUtil.SqlWithParams<UsedVehicle>(sqlGet, new { ReportMonth = monthId, ReportYear = yearId }, "ReynoldsData");
@@ -342,18 +342,38 @@ namespace UsedVehicles.Business
             var bRefresh = false;
 
             var soldVehicles = GetSoldVehicles(monthId, yearId);
+
+            //Now update the vehicle to sold if in Stock
             foreach (var vehicle in soldVehicles)
             {
-                var usedVehicle = usedVehicles.Find(x => x.StockNumber.Trim() == vehicle.stk_no.Trim());
+                var usedVehicle = usedVehicles.Find(x => x.StockNumber.Trim() == vehicle.stk_no.Trim() && x.VIN.Trim() == vehicle.VIN.Trim());
 
                 //if (usedVehicle.IsSold == false)
                 //{
-                    UpdateSoldVehicles(monthId, yearId, vehicle,usedVehicle.VIN,usedVehicle.ListAmount,usedVehicle.CostAmount);
+                if (usedVehicle != null)
+                {
+                    UpdateSoldVehicles(monthId, yearId, vehicle, usedVehicle.VIN, usedVehicle.ListAmount, usedVehicle.CostAmount);
                     bRefresh = true;
+                }
                 //}
 
 
             }
+
+            //Now check to see if all vehicles marked as sold, are still sold...
+            var allSoldVehicles = usedVehicles.FindAll(x => x.IsSold == true);
+            foreach(var vehicle in allSoldVehicles)
+            {
+                var soldVehicle = soldVehicles.Find(x => x.stk_no.Trim() == vehicle.StockNumber.Trim() && x.VIN.Trim() == vehicle.VIN.Trim());
+                if(soldVehicle == null)
+                {
+                    //Vehicle is no longer sold, remove the selling information
+                    RemoveSoldVehicles(monthId, yearId, vehicle, vehicle.VIN);
+                    bRefresh = true;
+                }
+            }
+
+            
 
             if (bRefresh)
             {
@@ -467,6 +487,19 @@ namespace UsedVehicles.Business
             return soldVehicles;
             
         }
+        public static List<UsedVehicle> GetPreviouslyTransferredUnits(int monthId, int yearId)
+        {
+            var reportDate = new DateTime(yearId, monthId, 1);
+            var prevReportDate = reportDate.AddMonths(-1);
+
+            //Get all Retail Sales, no Transfers
+            var soldVehicles = SqlMapperUtil.StoredProcWithParams<UsedVehicle>("sp_AgedUnitsGetPreviouslyTransferredUnitsNotSold", new { month = monthId, year = yearId, prevMonth = prevReportDate.Month, prevYear = prevReportDate.Year }, "ReynoldsData");
+
+            return soldVehicles;
+
+        }
+        
+
         public static List<SoldVehicle> GetSoldVehicles(int monthId, int yearId)
         {
             var startDate = new DateTime(yearId, monthId, 1).AddDays(-15);
@@ -474,9 +507,11 @@ namespace UsedVehicles.Business
 
             // WE NEED TO MAKE SURE WE GET BACK ONLY FINALIZED DEALS
             //var soldVehicles = SqlMapperUtil.SqlWithParams<SoldVehicle>("Select distinct sl_SellPrice as sell_price , sl_VehicleStockNumber as stk_no, sl_VehicleBuyerLast as b_last, sl_VehicleLoc as loc, sl_VehicleDealDate as deal_date, sl_VehicleCategory as category, sl_VehicleDaysInStock as daysinstk FROM [SALESCOMMISSION].[dbo].[saleslog] S WHERE sl_VehicleDealDate between @StartDate and @EndDate  AND sl_VehicleStockNumber IN (SELECT STOCKNumber FROM [REYDATA].[dbo].[AgedUnits] WHERE [MONTH] = @ReportMonth AND [YEAR] = @ReportYear) ORDER BY S.sl_VehicleLoc, sl_VehicleDaysInStock desc", new {StartDate = startDate, EndDate = endDate, ReportMonth = monthId, ReportYear = yearId }, "ReynoldsData");
-            var soldVehicles = SqlMapperUtil.SqlWithParams<SoldVehicle>("Select distinct sl_SellPrice as sell_price, sl_VehicleStockNumber as stk_no, sl_VehicleBuyerLast as b_last, sl_VehicleLoc as loc, sl_VehicleDealDate as deal_date, sl_VehicleCategory as category, sl_VehicleDaysInStock as daysinstk, sl_financeInc + [sl_bankfee] as FinanceIncome,sl_serviceContract as ServiceContract, sl_maintenanceContract as MaintenanceContract, sl_gap as GAP, sl_dealGross as DealGross, sl_dealKey as DealKey  FROM [SALESCOMMISSION].[dbo].[saleslog] S WHERE sl_VehicleStockNumber IN (SELECT STOCKNumber FROM [REYDATA].[dbo].[AgedUnits] WHERE [MONTH] = @ReportMonth AND [YEAR] = @ReportYear)  ORDER BY S.sl_VehicleDealDate, S.sl_VehicleLoc, sl_VehicleDaysInStock desc", new { StartDate = startDate, EndDate = endDate, ReportMonth = monthId, ReportYear = yearId }, "ReynoldsData");
+            var soldVehicles = SqlMapperUtil.SqlWithParams<SoldVehicle>("Select distinct sl_SellPrice as sell_price, sl_VehicleStockNumber as stk_no, sl_VehicleVIN as VIN, sl_VehicleBuyerLast as b_last, sl_VehicleLoc as loc, sl_VehicleDealDate as deal_date, sl_VehicleCategory as category, sl_VehicleDaysInStock as daysinstk, sl_financeInc + [sl_bankfee] as FinanceIncome,sl_serviceContract as ServiceContract, sl_maintenanceContract as MaintenanceContract, sl_gap as GAP, sl_dealGross as DealGross, sl_dealKey as DealKey,(sl_ftdpcadj + sl_BPP + sl_maint + sl_insurance + sl_leaseWnT + sl_etch + sl_otheram) as AdditionalGrossItems  FROM [SALESCOMMISSION].[dbo].[saleslog] S WHERE sl_VehicleStockNumber IN (SELECT STOCKNumber FROM [REYDATA].[dbo].[AgedUnits] WHERE [MONTH] = @ReportMonth AND [YEAR] = @ReportYear)  ORDER BY S.sl_VehicleDealDate, S.sl_VehicleLoc, sl_VehicleDaysInStock desc", new { StartDate = startDate, EndDate = endDate, ReportMonth = monthId, ReportYear = yearId }, "ReynoldsData");
+
+
             //var soldVehicles = SqlMapperUtil.SqlWithParams<SoldVehicle>("Select distinct sell_price, stk_no, b_last, SUBSTRING(location,1,3) as loc, deal_date, category, daysinstk From FOXPROTABLES.dbo.RCI_Fimaster where deal_date between @StartDate and @EndDate  AND stk_no IN (SELECT STOCKNumber FROM [REYDATA].[dbo].[AgedUnits] WHERE [MONTH] = @ReportMonth AND [YEAR] = @ReportYear) and (status = 'F' or status = 'C') ORDER BY SUBSTRING(location,1,3), daysinstk desc", new { StartDate = startDate, EndDate = endDate, ReportMonth = monthId, ReportYear = yearId }, "ReynoldsData");
-            
+
             return soldVehicles;
         }
 
@@ -489,13 +524,27 @@ namespace UsedVehicles.Business
                 customer = "Transfer - " + vehicle.b_last;
             }
 
-            var totalPVR = vehicle.DealGross;// + vehicle.FinanceIncome + vehicle.ServiceContract + vehicle.GAP + vehicle.MaintenanceContract;
+            var totalPVR = vehicle.DealGross + vehicle.FinanceIncome + vehicle.ServiceContract + vehicle.GAP + vehicle.MaintenanceContract + vehicle.AdditionalGrossItems;
             var sqlUpdate = "UPDATE [REYDATA].[dbo].AgedUnits set IsSold = 1, SellPrice = @SellPrice, SoldLocation = @Location, SoldDate = @SoldDate, UpdateDate = GETDATE(), CustomerName = @CustomerName, TotalPVR = @TotalPVR, DealNumber = @DealKey where [Month] = @ReportMonth and [Year] = @ReportYear and StockNumber = @StockNumber";
 
             var updated = SqlMapperUtil.InsertUpdateOrDeleteSql(sqlUpdate, new { SellPrice = vehicle.sell_price, Location = vehicle.loc, SoldDate = vehicle.deal_date, ReportMonth = monthId, ReportYear = yearId, StockNumber = vehicle.stk_no, CustomerName = customer, TotalPVR = totalPVR, DealKey = vehicle.DealKey }, "ReynoldsData");
 
             dynamic parms = new { Month = monthId, Year = yearId, StockNumber = vehicle.stk_no, VIN = vin, ListAmount = listAmount, CostAmount = costAmount, SellPrice = vehicle.sell_price, SoldLocation = vehicle.loc, SoldDate = vehicle.deal_date, CustomerName = customer, DealNumber = vehicle.DealKey, DealCategory = vehicle.category, UpdateDate = DateTime.Now };
             var updateUnitSales = SqlMapperUtil.InsertUpdateOrDeleteStoredProc("sp_AgedUnitsUpdateUnitSales", parms, "ReynoldsData");
+
+            return updated;
+        }
+
+        public static int RemoveSoldVehicles(int monthId, int yearId, UsedVehicle vehicle, string vin)
+        {
+            var sqlUpdate = "UPDATE [REYDATA].[dbo].AgedUnits set IsSold = 0, SellPrice = 0, SoldLocation = '', SoldDate = '', UpdateDate = GETDATE(), CustomerName = '', TotalPVR = 0, DealNumber = '' where [Month] = @ReportMonth and [Year] = @ReportYear and StockNumber = @StockNumber";
+
+            var updated = SqlMapperUtil.InsertUpdateOrDeleteSql(sqlUpdate, new {  ReportMonth = monthId, ReportYear = yearId, StockNumber = vehicle.StockNumber }, "ReynoldsData");
+
+            var sqlDelete = "DELETE FROM [REYDATA].[dbo].AgedUnitsSales where [Month] = @ReportMonth and [Year] = @ReportYear and StockNumber = @StockNumber and VIN = @VIN";
+
+            dynamic parms = new { ReportMonth = monthId, ReportYear = yearId, StockNumber = vehicle.StockNumber, VIN = vin};
+            var updateUnitSales = SqlMapperUtil.InsertUpdateOrDeleteSql(sqlDelete, parms, "ReynoldsData");
 
             return updated;
         }

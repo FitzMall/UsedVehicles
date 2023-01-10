@@ -62,6 +62,34 @@ namespace UsedVehicles.Controllers
             }
 
             usedVehicleModel.TransferredVehicles = usedVehicleModel.UsedVehicles.FindAll(x => x.CustomerName != null && x.CustomerName.StartsWith("Transfer"));
+            // Add Previously Transferred Vehicles that have not sold...
+            var previouslyTransferred = SqlQueries.GetPreviouslyTransferredUnits(usedVehicleModel.MonthId, usedVehicleModel.YearId);
+            foreach (var vehicle in previouslyTransferred)
+            {
+                var liveVehicle = usedVehicleModel.AllUsedVehicles.Find(x => x.StockNumber.Trim() == vehicle.StockNumber.Trim());
+
+                if (liveVehicle != null && liveVehicle.ListAmount > 0)
+                {
+                    vehicle.NewListAmount = liveVehicle.ListAmount;
+                    vehicle.CurrentInvAmount = liveVehicle.CostAmount;
+                    vehicle.CurrentLocation = liveVehicle.Location;
+
+                    if (vehicle.CurrentLocation != vehicle.Location)
+                    {
+                        vehicle.Days4008 = liveVehicle.Days4008;
+                    }
+
+                }
+                else
+                {
+                    vehicle.CurrentInvAmount = vehicle.CostAmount;
+                }
+            }
+
+
+            usedVehicleModel.TransferredVehicles.AddRange(previouslyTransferred);
+
+
             //see if Transferred Vehicles have been sold?
             usedVehicleModel.SoldVehicles = SqlQueries.GetSoldAndTransferredUnits(usedVehicleModel.MonthId, usedVehicleModel.YearId);
 
@@ -167,6 +195,31 @@ namespace UsedVehicles.Controllers
             }
 
             usedVehicleModel.TransferredVehicles = usedVehicleModel.UsedVehicles.FindAll(x => x.CustomerName != null && x.CustomerName.StartsWith("Transfer"));
+            // Add Previously Transferred Vehicles that have not sold...
+            var previouslyTransferred = SqlQueries.GetPreviouslyTransferredUnits(usedVehicleModel.MonthId, usedVehicleModel.YearId);
+            foreach (var vehicle in previouslyTransferred)
+            {
+                var liveVehicle = usedVehicleModel.AllUsedVehicles.Find(x => x.StockNumber.Trim() == vehicle.StockNumber.Trim());
+
+                if (liveVehicle != null && liveVehicle.ListAmount > 0)
+                {
+                    vehicle.NewListAmount = liveVehicle.ListAmount;
+                    vehicle.CurrentInvAmount = liveVehicle.CostAmount;
+                    vehicle.CurrentLocation = liveVehicle.Location;
+
+                    if (vehicle.CurrentLocation != vehicle.Location)
+                    {
+                        vehicle.Days4008 = liveVehicle.Days4008;
+                    }
+
+                }
+                else
+                {
+                    vehicle.CurrentInvAmount = vehicle.CostAmount;
+                }
+            }
+            usedVehicleModel.TransferredVehicles.AddRange(previouslyTransferred);
+
             //see if Transferred Vehicles have been sold?
             usedVehicleModel.SoldVehicles = SqlQueries.GetSoldAndTransferredUnits(usedVehicleModel.MonthId, usedVehicleModel.YearId);
 

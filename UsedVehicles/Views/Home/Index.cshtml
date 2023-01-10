@@ -3765,7 +3765,7 @@
 
                                     if (priceChangeDate == new DateTime())
                                     {
-                                        DaysAtPrice = vehicle.DaysInventory;
+                                        DaysAtPrice = vehicle.Days4008;
                                     }
                                     else
                                     {
@@ -3787,6 +3787,28 @@
                                         WriteDownPercent = ((1 - (CurrentInvAmount / vehicle.CostAmount)));
                                         AllWDCount += 1;
                                     }
+
+                                    var profitWDbackgroundColor = "";
+                                    if (vehicleProfitWD < 0)
+                                    {
+                                        profitWDbackgroundColor = "style=background-color:#f4c7c3";
+                                    }
+                                    else
+                                    {
+                                        profitWDbackgroundColor = "style=background-color:#b7e1cd";
+                                    }
+
+                                    var profitPVRbackgroundColor = "";
+                                    if (vehicle.TotalPVR < 0)
+                                    {
+                                        profitPVRbackgroundColor = "style=background-color:#f4c7c3";
+                                    }
+                                    else
+                                    {
+                                        profitPVRbackgroundColor = "style=background-color:#b7e1cd";
+                                    }
+
+
                                     <tr>
                                         <td class="text-center" @backgroundColor>@vehicle.Location</td>
                                         <td class="text-center" @backgroundColor><a href="https://www.fitzmall.com/Inventory/Detail/@vehicle.XrefId" target="_blank">@vehicle.StockNumber</a></td>
@@ -3830,8 +3852,8 @@
                                                     @*<td class="text-center" @backgroundColor>@vehicle.TotalPVR.ToString("C", nfi)</td>*@
 
                                                     <td class="text-center" @profitbackgroundColor>@vehicleProfit.ToString("C", nfi)</td>
-                                                    <td class="text-center" @profitbackgroundColor>@vehicleProfitWD.ToString("C", nfi)</td>
-                                                    <td class="text-center" @profitbackgroundColor>@vehicle.TotalPVR.ToString("C", nfi)</td>
+                                                    <td class="text-center" @profitWDbackgroundColor>@vehicleProfitWD.ToString("C", nfi)</td>
+                                                    <td class="text-center" @profitPVRbackgroundColor>@vehicle.TotalPVR.ToString("C", nfi)</td>
                                         }
                                         else
                                         {
@@ -3841,9 +3863,9 @@
                                                     @*<td class="text-center" @backgroundColor></td>*@
                                                     <td class="text-center" @backgroundColor></td>
                                                     @*<td class="text-center" @backgroundColor></td>*@
-                                                    <td class="text-center" @profitbackgroundColor></td>
-                                                    <td class="text-center" @profitbackgroundColor></td>
-                                                    <td class="text-center" @profitbackgroundColor></td>
+                                                    <td class="text-center" @backgroundColor></td>
+                                                    <td class="text-center" @backgroundColor></td>
+                                                    <td class="text-center" @backgroundColor></td>
                                         }
                                     </tr>
 
@@ -3926,6 +3948,38 @@
                         }
                         <tfoot>
                             <tr style="background-color:#d9edf7">
+                                <th class="text-center">Loc</th>
+                                <th class="text-center">Stock #</th>
+                                <th class="text-center">Year</th>
+                                <th>Make</th>
+                                <th>Model</th>
+                                @*<th>VIN</th>
+            <th>Exterior Color</th>*@
+                                <th class="text-center">All Days in Inv</th>
+                                <th class="text-center">Days at Location</th>
+                                <th class="text-center">Mileage</th>
+
+                                <th>Orig Inv Amt</th>
+                                <th>List Amt<br />(@AlllistAmountDate.ToShortDateString())</th>
+
+                                <th>New Inv Amt<br />(@DateTime.Now.ToShortDateString())</th>
+                                <th>WD Amt</th>
+                                <th>WD %</th>
+                                <th>Current FitzWay Price</th>
+                                <th>Days at Price</th>
+                                <th>FE profit Orig</th>
+                                <th>FE profit WD</th>
+                                <th>Status</th>
+                                <th>Customer Name or Transferred Store</th>
+                                <th>Sell Price</th>
+                                @*<th>Sold Loc</th>*@
+                                <th>Sold Date</th>
+                                @*<th>Total PVR</th>*@
+                                <th>FE profit Orig</th>
+                                <th>FE profit WD</th>
+                                <th>Sales Log Deal Gross</th>
+                            </tr>
+                            <tr style="background-color:#d9edf7">
                                 <th class="text-center">Totals</th>
                                 <th class="text-center">Units:</th>
                                 <th class="text-center">@AllVehicleCount</th>
@@ -3959,16 +4013,16 @@
                                 <th class="text-center">Retail:</th>
                                 @*<th class="text-center">@AllVehicleRetailTotalPVR.ToString("C", nfi)</th>*@
                                 <th class="text-center" @AlllossIndicator>@AllRetailProfitTotal.ToString("C", nfi)<br />@avgAllRetailVehicleProfit.ToString("C", nfi)</th>
-                                <th class="text-center">@AllRetailWDProfitTotal.ToString("C", nfi)<br />@avgAllRetailVehicleWDProfit.ToString("C", nfi)</th>
-                                <th class="text-center">@AllRetailSLProfitTotal.ToString("C", nfi)<br />@avgAllRetailVehicleSLProfit.ToString("C", nfi)</th>
+                                <th class="text-center" @AlllossIndicator>@AllRetailWDProfitTotal.ToString("C", nfi)<br />@avgAllRetailVehicleWDProfit.ToString("C", nfi)</th>
+                                <th class="text-center" @AlllossIndicator>@AllRetailSLProfitTotal.ToString("C", nfi)<br />@avgAllRetailVehicleSLProfit.ToString("C", nfi)</th>
                             </tr>
                             <tr style="background-color:#d9edf7">
                                 <th class="text-center" colspan="20"></th>
                                 <th class="text-center">Transfers:</th>
                                 @*<th class="text-center">@AllVehicleTransferTotalPVR.ToString("C", nfi)</th>*@
                                 <th class="text-center" @AlllossIndicator>@AllTransferProfitTotal.ToString("C", nfi)<br />@avgAllTransferVehicleProfit.ToString("C", nfi)</th>
-                                <th class="text-center">@AllTransferWDProfitTotal.ToString("C", nfi)<br />@avgAllTransferVehicleWDProfit.ToString("C", nfi)</th>
-                                <th class="text-center">@AllTransferSLProfitTotal.ToString("C", nfi)<br />@avgAllTransferVehicleSLProfit.ToString("C", nfi)</th>
+                                <th class="text-center" @AlllossIndicator>@AllTransferWDProfitTotal.ToString("C", nfi)<br />@avgAllTransferVehicleWDProfit.ToString("C", nfi)</th>
+                                <th class="text-center" @AlllossIndicator>@AllTransferSLProfitTotal.ToString("C", nfi)<br />@avgAllTransferVehicleSLProfit.ToString("C", nfi)</th>
                             </tr>
 
                             @{
@@ -4250,7 +4304,7 @@
 
                                     if (priceChangeDate == new DateTime())
                                     {
-                                        DaysAtPrice = vehicle.DaysInventory;
+                                        DaysAtPrice = vehicle.Days4008;
                                     }
                                     else
                                     {
@@ -4261,9 +4315,9 @@
                                     //If(vehicle.CurrentInvAmount
 
                                     ProfitOrigInvAmount = vehicle.NewListAmount - vehicle.CostAmount;
-                                    ProfitCurrentInvAmount = vehicle.NewListAmount - CurrentInvAmount;
-
                                     CurrentInvAmount = vehicle.CurrentInvAmount;
+
+                                    ProfitCurrentInvAmount = vehicle.NewListAmount - CurrentInvAmount;
 
                                     if (vehicle.CurrentInvAmount > 0 && vehicle.CurrentInvAmount != vehicle.CostAmount)
                                     {
@@ -4273,6 +4327,27 @@
                                         WriteDownPercent = ((1 - (CurrentInvAmount / vehicle.CostAmount)));
                                         transfersWDCount += 1;
                                     }
+
+                                    var profitWDbackgroundColor = "";
+                                    if (vehicleProfitWD < 0)
+                                    {
+                                        profitWDbackgroundColor = "style=background-color:#f4c7c3";
+                                    }
+                                    else
+                                    {
+                                        profitWDbackgroundColor = "style=background-color:#b7e1cd";
+                                    }
+
+                                    var profitPVRbackgroundColor = "";
+                                    if (vehicle.TotalPVR < 0)
+                                    {
+                                        profitPVRbackgroundColor = "style=background-color:#f4c7c3";
+                                    }
+                                    else
+                                    {
+                                        profitPVRbackgroundColor = "style=background-color:#b7e1cd";
+                                    }
+
                                     <tr>
                                         <td class="text-center" @backgroundColor>@vehicle.CurrentLocation</td>
                                         <td class="text-center" @backgroundColor>@vehicle.Location</td>
@@ -4309,15 +4384,15 @@
 
                                         @if (bSold)
                                         {
-                                            <td class="text-center" @backgroundColor>@soldTransfer.Status <a href="http://jjfserver/SalesCommission/Sales/DealDetail/@vehicle.DealNumber" target="_blank">(SOLD)</a></td>
+                                            <td class="text-center" @backgroundColor>@soldTransfer.Status <a href="http://jjfserver/SalesCommission/Sales/DealDetail/@soldTransfer.DealNumber" target="_blank">(SOLD)</a></td>
                                             <td class="text-center" @backgroundColor>@soldTransfer.CustomerName</td>
                                                     <td class="text-center" @backgroundColor>@soldTransfer.SellPrice.ToString("C", nfi)</td>
                                                     @*<td class="text-center" @backgroundColor>@vehicle.SoldLocation</td>*@
                                                     <td class="text-center" @backgroundColor>@soldTransfer.SoldDate.ToShortDateString()</td>
                                                     @*<td class="text-center" @backgroundColor>@vehicle.TotalPVR.ToString("C", nfi)</td>*@
                                                     <td class="text-center" @profitbackgroundColor>@vehicleProfit.ToString("C", nfi)</td>
-                                                    <td class="text-center" @profitbackgroundColor>@vehicleProfitWD.ToString("C", nfi)</td>
-                                                    <td class="text-center" @profitbackgroundColor>@vehicle.TotalPVR.ToString("C", nfi)</td>
+                                                    <td class="text-center" @profitWDbackgroundColor>@vehicleProfitWD.ToString("C", nfi)</td>
+                                                    <td class="text-center" @profitPVRbackgroundColor>@vehicle.TotalPVR.ToString("C", nfi)</td>
                                         }
                                         else
                                         {
@@ -4327,9 +4402,9 @@
                                                     @*<td class="text-center" @backgroundColor></td>*@
                                                     <td class="text-center" @backgroundColor></td>
                                                     @*<td class="text-center" @backgroundColor></td>*@
-                                                    <td class="text-center" @profitbackgroundColor></td>
-                                                    <td class="text-center" @profitbackgroundColor></td>
-                                                    <td class="text-center" @profitbackgroundColor></td>
+                                                    <td class="text-center" @backgroundColor></td>
+                                                    <td class="text-center" @backgroundColor></td>
+                                                    <td class="text-center" @backgroundColor></td>
                                         }
                                     </tr>
 
@@ -4412,6 +4487,39 @@
                         }
                         <tfoot>
                             <tr style="background-color:#d9edf7">
+                                <th class="text-center">New Location</th>
+                                <th class="text-center">Transfer From</th>
+                                <th class="text-center">Stock #</th>
+                                <th class="text-center">Year</th>
+                                <th>Make</th>
+                                <th>Model</th>
+                                @*<th>VIN</th>
+            <th>Exterior Color</th>*@
+                                <th class="text-center">All Days in Inv</th>
+                                <th class="text-center">Days at Location</th>
+                                <th class="text-center">Mileage</th>
+
+                                <th>Orig Inv Amt</th>
+                                <th>List Amt<br />(@AlllistAmountDate.ToShortDateString())</th>
+
+                                <th>New Inv Amt<br />(@DateTime.Now.ToShortDateString())</th>
+                                <th>WD Amt</th>
+                                <th>WD %</th>
+                                <th>Current FitzWay Price</th>
+                                <th>Days at Price</th>
+                                <th>FE profit Orig</th>
+                                <th>FE profit WD</th>
+                                <th>Status</th>
+                                <th>Customer Name or Transferred Store</th>
+                                <th>Sell Price</th>
+                                @*<th>Sold Loc</th>*@
+                                <th>Sold Date</th>
+                                @*<th>Total PVR</th>*@
+                                <th>FE profit Orig</th>
+                                <th>FE profit WD</th>
+                                <th>Sales Log Deal Gross</th>
+                            </tr>
+                            <tr style="background-color:#d9edf7">
                                 <th class="text-center" colspan="2">Totals</th>
                                 <th class="text-center">Units:</th>
                                 <th class="text-center">@transfersVehicleCount</th>
@@ -4445,16 +4553,16 @@
                                 <th class="text-center">Retail:</th>
                                 @*<th class="text-center">@TransferVehicleRetailTotalPVR.ToString("C", nfi)</th>*@
                                 <th class="text-center" @transferslossIndicator>@transfersRetailProfitTotal.ToString("C", nfi)<br />@avgtransfersRetailVehicleProfit.ToString("C", nfi)</th>
-                                <th class="text-center">@transfersRetailWDProfitTotal.ToString("C", nfi)<br />@avgtransfersRetailVehicleWDProfit.ToString("C", nfi)</th>
-                                <th class="text-center">@transfersRetailSLProfitTotal.ToString("C", nfi)<br />@avgtransfersRetailVehicleSLProfit.ToString("C", nfi)</th>
+                                <th class="text-center" @transferslossIndicator>@transfersRetailWDProfitTotal.ToString("C", nfi)<br />@avgtransfersRetailVehicleWDProfit.ToString("C", nfi)</th>
+                                <th class="text-center" @transferslossIndicator>@transfersRetailSLProfitTotal.ToString("C", nfi)<br />@avgtransfersRetailVehicleSLProfit.ToString("C", nfi)</th>
                             </tr>
                             <tr style="background-color:#d9edf7">
                                 <th class="text-center" colspan="21"></th>
                                 <th class="text-center">Transfers:</th>
                                 @*<th class="text-center">@TransferVehicleTransferTotalPVR.ToString("C", nfi)</th>*@
                                 <th class="text-center" @transferslossIndicator>@transfersTransferProfitTotal.ToString("C", nfi)<br />@avgtransfersTransferVehicleProfit.ToString("C", nfi)</th>
-                                <th class="text-center">@transfersTransferWDProfitTotal.ToString("C", nfi)<br />@avgtransfersTransferVehicleWDProfit.ToString("C", nfi)</th>
-                                <th class="text-center">@transfersTransferSLProfitTotal.ToString("C", nfi)<br />@avgtransfersTransferVehicleSLProfit.ToString("C", nfi)</th>
+                                <th class="text-center" @transferslossIndicator>@transfersTransferWDProfitTotal.ToString("C", nfi)<br />@avgtransfersTransferVehicleWDProfit.ToString("C", nfi)</th>
+                                <th class="text-center" @transferslossIndicator>@transfersTransferSLProfitTotal.ToString("C", nfi)<br />@avgtransfersTransferVehicleSLProfit.ToString("C", nfi)</th>
                             </tr>
 
                             @{
@@ -4735,7 +4843,7 @@
 
                                             if (priceChangeDate == new DateTime())
                                             {
-                                                DaysAtPrice = vehicle.DaysInventory;
+                                                DaysAtPrice = vehicle.Days4008;
                                             }
                                             else
                                             {
@@ -4757,6 +4865,27 @@
                                                 WriteDownPercent = ((1 - (CurrentInvAmount / vehicle.CostAmount)) );
                                                 StoreWDCount += 1;
                                             }
+
+                                            var profitWDbackgroundColor = "";
+                                            if (vehicleProfitWD < 0)
+                                            {
+                                                profitWDbackgroundColor = "style=background-color:#f4c7c3";
+                                            }
+                                            else
+                                            {
+                                                profitWDbackgroundColor = "style=background-color:#b7e1cd";
+                                            }
+
+                                            var profitPVRbackgroundColor = "";
+                                            if (vehicle.TotalPVR < 0)
+                                            {
+                                                profitPVRbackgroundColor = "style=background-color:#f4c7c3";
+                                            }
+                                            else
+                                            {
+                                                profitPVRbackgroundColor = "style=background-color:#b7e1cd";
+                                            }
+
                                             <tr>
                                                 <td class="text-center" @backgroundColor>@vehicle.Location</td>
                                                 <td class="text-center" @backgroundColor><a href="https://www.fitzmall.com/Inventory/Detail/@vehicle.XrefId" target="_blank">@vehicle.StockNumber</a></td>
@@ -4797,8 +4926,8 @@
                                                     <td class="text-center" @backgroundColor>@vehicle.SoldDate.ToShortDateString()</td>
                                                     @*<td class="text-center" @backgroundColor>@vehicle.TotalPVR.ToString("C", nfi)</td>*@
                                                     <td class="text-center" @profitbackgroundColor>@vehicleProfit.ToString("C", nfi)</td>
-                                                    <td class="text-center" @profitbackgroundColor>@vehicleProfitWD.ToString("C", nfi)</td>
-                                                    <td class="text-center" @profitbackgroundColor>@vehicle.TotalPVR.ToString("C", nfi)</td>
+                                                    <td class="text-center" @profitWDbackgroundColor>@vehicleProfitWD.ToString("C", nfi)</td>
+                                                    <td class="text-center" @profitPVRbackgroundColor>@vehicle.TotalPVR.ToString("C", nfi)</td>
                                                 }
                                                 else
                                                 {
@@ -4808,9 +4937,9 @@
                                                     @*<td class="text-center" @backgroundColor></td>*@
                                                     <td class="text-center" @backgroundColor></td>
                                                     @*<td class="text-center" @backgroundColor></td>*@
-                                                    <td class="text-center" @profitbackgroundColor></td>
-                                                    <td class="text-center" @profitbackgroundColor></td>
-                                                    <td class="text-center" @profitbackgroundColor></td>
+                                                    <td class="text-center" @backgroundColor></td>
+                                                    <td class="text-center" @backgroundColor></td>
+                                                    <td class="text-center" @backgroundColor></td>
                                                 }
                                             </tr>
 
@@ -4891,6 +5020,38 @@
                                 }
                                 <tfoot>
                                     <tr style="background-color:#d9edf7">
+                                        <th class="text-center">Loc</th>
+                                        <th class="text-center">Stock #</th>
+                                        <th class="text-center">Year</th>
+                                        <th>Make</th>
+                                        <th>Model</th>
+                                        @*<th>VIN</th>
+            <th>Exterior Color</th>*@
+                                        <th class="text-center">All Days in Inv</th>
+                                        <th class="text-center">Days at Location</th>
+                                        <th class="text-center">Mileage</th>
+
+                                        <th>Orig Inv Amt</th>
+                                        <th>List Amt<br />(@AlllistAmountDate.ToShortDateString())</th>
+
+                                        <th>New Inv Amt<br />(@DateTime.Now.ToShortDateString())</th>
+                                        <th>WD Amt</th>
+                                        <th>WD %</th>
+                                        <th>Current FitzWay Price</th>
+                                        <th>Days at Price</th>
+                                        <th>FE profit Orig</th>
+                                        <th>FE profit WD</th>
+                                        <th>Status</th>
+                                        <th>Customer Name or Transferred Store</th>
+                                        <th>Sell Price</th>
+                                        @*<th>Sold Loc</th>*@
+                                        <th>Sold Date</th>
+                                        @*<th>Total PVR</th>*@
+                                        <th>FE profit Orig</th>
+                                        <th>FE profit WD</th>
+                                        <th>Sales Log Deal Gross</th>
+                                    </tr>
+                                    <tr style="background-color:#d9edf7">
                                         <th class="text-center">Totals</th>
                                         <th class="text-center">Units:</th>
                                         <th class="text-center">@StoreVehicleCount</th>
@@ -4956,16 +5117,16 @@
                                         <th class="text-center">Retail:</th>
                                         @*<th class="text-center">@VehicleRetailTotalPVR.ToString("C", nfi)</th>*@
                                         <th class="text-center" @lossIndicator>@StoreRetailProfitTotal.ToString("C", nfi)<br />@avgStoreRetailVehicleProfit.ToString("C", nfi)</th>
-                                        <th class="text-center">@StoreRetailWDProfitTotal.ToString("C", nfi)<br />@avgStoreRetailVehicleWDProfit.ToString("C", nfi)</th>
-                                        <th class="text-center">@StoreRetailSLProfitTotal.ToString("C", nfi)<br />@avgStoreRetailVehicleSLProfit.ToString("C", nfi)</th>
+                                        <th class="text-center" @lossIndicator>@StoreRetailWDProfitTotal.ToString("C", nfi)<br />@avgStoreRetailVehicleWDProfit.ToString("C", nfi)</th>
+                                        <th class="text-center" @lossIndicator>@StoreRetailSLProfitTotal.ToString("C", nfi)<br />@avgStoreRetailVehicleSLProfit.ToString("C", nfi)</th>
                                     </tr>
                                     <tr style="background-color:#d9edf7">
                                         <th class="text-center" colspan="20"></th>
                                         <th class="text-center">Transfers:</th>
                                         @*<th class="text-center">@VehicleTransferTotalPVR.ToString("C", nfi)</th>*@
                                         <th class="text-center" @lossIndicator>@StoreTransferProfitTotal.ToString("C", nfi)<br />@avgStoreTransferVehicleProfit.ToString("C", nfi)</th>
-                                        <th class="text-center">@StoreTransferWDProfitTotal.ToString("C", nfi)<br />@avgStoreTransferVehicleWDProfit.ToString("C", nfi)</th>
-                                        <th class="text-center">@StoreTransferSLProfitTotal.ToString("C", nfi)<br />@avgStoreTransferVehicleSLProfit.ToString("C", nfi)</th>
+                                        <th class="text-center" @lossIndicator>@StoreTransferWDProfitTotal.ToString("C", nfi)<br />@avgStoreTransferVehicleWDProfit.ToString("C", nfi)</th>
+                                        <th class="text-center" @lossIndicator>@StoreTransferSLProfitTotal.ToString("C", nfi)<br />@avgStoreTransferVehicleSLProfit.ToString("C", nfi)</th>
                                     </tr>
 
                                     <tr style="background-color:#d9edf7">

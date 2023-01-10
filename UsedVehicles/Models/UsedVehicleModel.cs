@@ -127,6 +127,7 @@ namespace UsedVehicles.Models
     {
         public decimal sell_price { get; set; }
         public string stk_no { get; set; }
+        public string VIN { get; set; }
         public string b_last { get; set; }
         public string loc { get; set; }
         public DateTime deal_date { get; set; }
@@ -138,6 +139,7 @@ namespace UsedVehicles.Models
         public decimal MaintenanceContract { get; set; }
         public decimal DealGross { get; set; }
         public string DealKey { get; set; }
+        public decimal AdditionalGrossItems { get; set; }
     }
 
 
