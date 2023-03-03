@@ -197,7 +197,7 @@ namespace UsedVehicles.Business
                       'F906','F907','F908','F909','F910','F911','F912','F913','F916','F917','F918','F922','F923'
                       ))";
             
-        var usedVehicles = SqlMapperUtil.SqlWithParams<UsedVehicle>(sqlGet, new { }, "SQLServer");
+            var usedVehicles = SqlMapperUtil.SqlWithParams<UsedVehicle>(sqlGet, new { }, "SQLServer");
 
             return usedVehicles;
         }
@@ -249,11 +249,8 @@ namespace UsedVehicles.Business
 
         public static List<TitleStatus> GetAllTitleStatus()
         {
-
             var titleStatus = SqlMapperUtil.StoredProcWithParams<TitleStatus>("sp_SalesLogReportGetAllTitleStatus", null, "SalesCommission");
-
             return titleStatus;
-
         }
 
         public static List<OpenRecalls> GetAllOpenRecalls()
@@ -309,8 +306,8 @@ namespace UsedVehicles.Business
                         where V_Stock in (Select V_Stock from [FITZWAY].[dbo].[Allinventory] A where A.V_nu = 'USED')";
 
             var priceChanges = SqlMapperUtil.SqlWithParams<VehiclePriceChange>(sqlGet, new { }, "Rackspace");
-
             return priceChanges;
+
         }
 
         public static List<VehiclePriceChange> GetAllUsedVehiclePriceChanges()
@@ -326,6 +323,7 @@ namespace UsedVehicles.Business
             var priceChanges = SqlMapperUtil.SqlWithParams<VehiclePriceChange>(sqlGet, new { }, "Rackspace");
 
             return priceChanges;
+
         }
 
         public static List<UsedVehicle> GetUsedVehicles(int monthId, int yearId)
@@ -340,23 +338,18 @@ namespace UsedVehicles.Business
             var usedVehicles = SqlMapperUtil.SqlWithParams<UsedVehicle>(sqlGet, new { ReportMonth = monthId, ReportYear = yearId }, "ReynoldsData");
 
             var bRefresh = false;
-
             var soldVehicles = GetSoldVehicles(monthId, yearId);
 
-            //Now update the vehicle to sold if in Stock
+            // Now update the vehicle to sold if in Stock
             foreach (var vehicle in soldVehicles)
             {
                 var usedVehicle = usedVehicles.Find(x => x.StockNumber.Trim() == vehicle.stk_no.Trim() && x.VIN.Trim() == vehicle.VIN.Trim());
 
-                //if (usedVehicle.IsSold == false)
-                //{
                 if (usedVehicle != null)
                 {
                     UpdateSoldVehicles(monthId, yearId, vehicle, usedVehicle.VIN, usedVehicle.ListAmount, usedVehicle.CostAmount);
                     bRefresh = true;
                 }
-                //}
-
 
             }
 
@@ -373,8 +366,6 @@ namespace UsedVehicles.Business
                 }
             }
 
-            
-
             if (bRefresh)
             {
                 usedVehicles = SqlMapperUtil.SqlWithParams<UsedVehicle>(sqlGet, new { ReportMonth = monthId, ReportYear = yearId }, "ReynoldsData");
@@ -388,7 +379,6 @@ namespace UsedVehicles.Business
             var vehicleNotes = new VehicleNotes();
 
             var sqlGet = "SELECT [Id],[Location],[VIN] ,[StockNumber],[InventoryStatus],[Notes],[LotLocation],[UpdateDate],[UpdateUser],[VehicleSold],[VehicleSoldDate],[VehicleSoldNotes] FROM [fitzway].[dbo].[InventoryStatusNotes]";
-
             var notes = SqlMapperUtil.SqlWithParams<VehicleNotes>(sqlGet, new {  }, "SQLServer");
 
             return notes;
@@ -399,7 +389,6 @@ namespace UsedVehicles.Business
             var vehicleNotes = new VehicleNotes();
 
             var sqlGet = "SELECT [Id],[Location],[VIN] ,[StockNumber],[InventoryStatus],[Notes],[LotLocation],[UpdateDate],[UpdateUser],[VehicleSold],[VehicleSoldDate],[VehicleSoldNotes] FROM [fitzway].[dbo].[InventoryStatusNotes] where VIN = @vin and InventoryStatus = @status";
-
             var  notes = SqlMapperUtil.SqlWithParams<VehicleNotes>(sqlGet, new {vin = vin, status = status }, "SQLServer");
 
             if (notes != null && notes.Count > 0)
@@ -426,10 +415,21 @@ namespace UsedVehicles.Business
             return saveInputs;
         }
 
-        public static List<InventoryHistoryStatus> GetInventoryHistory()
+        public static List<InventoryHistoryStatus> GetInventoryHistory(int month, int year)
         {
-            //var sqlGet = " Select UCHISTID, days, loc, stk, vin, color, status, updated, list_amt from [FOXPROTABLES].[dbo].[UCHISTFOX] UCH where UCH.vin in (Select vin from[10.254.162.196].junk.dbo.CSV_VehicleUsed) order by stk, uchistid desc";
-            var sqlGet = "Select UCHISTID, UCH.days, UCH.loc, UCH.stk, UCH.vin, UCH.color, UCH.status, UCH.updated, UCH.list_amt from [FOXPROTABLES].[dbo].[UCHISTFOX] UCH join [10.254.162.196].junk.dbo.CSV_VehicleUsed VU ON UCH.VIN = VU.VIN AND UCH.list_amt<> vu.list_amt where UCH.vin <> '' and UCH.list_amt > 0  order by stk, uchistid desc";
+
+            //var sqlGetCurrentVINs = "Select Distinct VIN from Junk.dbo.csv_VehicleUsed where VIN <> ''";
+            //var sqlGetAgedVINs = "Select Distinct VIN from ReyData.dbo.AgedUnits where VIN <> '' and month = @month and year = @year";
+
+            //var usedVins = SqlMapperUtil.SqlWithParams<string>(sqlGetCurrentVINs, new { }, "SQLServer");
+            //var agedVins = SqlMapperUtil.SqlWithParams<string>(sqlGetAgedVINs, new { month = month, year = year }, "SQLServer");
+
+            //usedVins.AddRange(agedVins);
+
+            //var vins = usedVins.Distinct().ToArray();
+
+            var sqlGet = " Select UCHISTID, days, loc, stk, vin, color, status, updated, list_amt, Inv_Amt from [JUNK].[dbo].[CurrentUsedHistory] order by stk, uchistid desc";
+            //var sqlGet = "Select UCHISTID, UCH.days, UCH.loc, UCH.stk, UCH.vin, UCH.color, UCH.status, UCH.updated, UCH.list_amt, UCH.Inv_Amt from [FOXPROTABLES].[dbo].[UCHISTFOX] UCH  where updated > DATEADD(month,-6,getdate())  order by stk, uchistid desc";
             //var invHistory = SqlMapperUtil.SqlWithParams<InventoryHistoryStatus>(sqlGet, new { }, "FDServer");
 
             var x = new Cache();
@@ -437,10 +437,10 @@ namespace UsedVehicles.Business
            List<InventoryHistoryStatus> invHistory = x["InvHistory"] as List<InventoryHistoryStatus>;
             if (invHistory == null) //not in cache
             {
-                 invHistory = SqlMapperUtil.SqlWithParams<InventoryHistoryStatus>(sqlGet, new { }, "FDServer");
+                 invHistory = SqlMapperUtil.SqlWithParams<InventoryHistoryStatus>(sqlGet, new {  }, "SQLServer");
                 x["InvHistory"] = invHistory;
             }
-         
+
 
             return invHistory;
         }
@@ -479,14 +479,14 @@ namespace UsedVehicles.Business
 
             return repoVehicles;
         }
+
         public static List<UsedVehicle> GetSoldAndTransferredUnits(int monthId, int yearId)
         {
             //Get all Retail Sales, no Transfers
-            var soldVehicles = SqlMapperUtil.SqlWithParams<UsedVehicle>("SELECT* FROM[REYDATA].[dbo].[AgedUnitsSales] where[Month] = @MonthID and[Year] = @YearID and DealCategory <> 'T'", new { MonthID = monthId, YearID = yearId }, "ReynoldsData");
-            
-            return soldVehicles;
-            
+            var soldVehicles = SqlMapperUtil.SqlWithParams<UsedVehicle>("SELECT* FROM[REYDATA].[dbo].[AgedUnitsSales] where[Month] = @MonthID and[Year] = @YearID and DealCategory <> 'T'", new { MonthID = monthId, YearID = yearId }, "ReynoldsData");            
+            return soldVehicles;            
         }
+
         public static List<UsedVehicle> GetPreviouslyTransferredUnits(int monthId, int yearId)
         {
             var reportDate = new DateTime(yearId, monthId, 1);
@@ -494,9 +494,7 @@ namespace UsedVehicles.Business
 
             //Get all Retail Sales, no Transfers
             var soldVehicles = SqlMapperUtil.StoredProcWithParams<UsedVehicle>("sp_AgedUnitsGetPreviouslyTransferredUnitsNotSold", new { month = monthId, year = yearId, prevMonth = prevReportDate.Month, prevYear = prevReportDate.Year }, "ReynoldsData");
-
             return soldVehicles;
-
         }
         
 
@@ -508,9 +506,6 @@ namespace UsedVehicles.Business
             // WE NEED TO MAKE SURE WE GET BACK ONLY FINALIZED DEALS
             //var soldVehicles = SqlMapperUtil.SqlWithParams<SoldVehicle>("Select distinct sl_SellPrice as sell_price , sl_VehicleStockNumber as stk_no, sl_VehicleBuyerLast as b_last, sl_VehicleLoc as loc, sl_VehicleDealDate as deal_date, sl_VehicleCategory as category, sl_VehicleDaysInStock as daysinstk FROM [SALESCOMMISSION].[dbo].[saleslog] S WHERE sl_VehicleDealDate between @StartDate and @EndDate  AND sl_VehicleStockNumber IN (SELECT STOCKNumber FROM [REYDATA].[dbo].[AgedUnits] WHERE [MONTH] = @ReportMonth AND [YEAR] = @ReportYear) ORDER BY S.sl_VehicleLoc, sl_VehicleDaysInStock desc", new {StartDate = startDate, EndDate = endDate, ReportMonth = monthId, ReportYear = yearId }, "ReynoldsData");
             var soldVehicles = SqlMapperUtil.SqlWithParams<SoldVehicle>("Select distinct sl_SellPrice as sell_price, sl_VehicleStockNumber as stk_no, sl_VehicleVIN as VIN, sl_VehicleBuyerLast as b_last, sl_VehicleLoc as loc, sl_VehicleDealDate as deal_date, sl_VehicleCategory as category, sl_VehicleDaysInStock as daysinstk, sl_financeInc + [sl_bankfee] as FinanceIncome,sl_serviceContract as ServiceContract, sl_maintenanceContract as MaintenanceContract, sl_gap as GAP, sl_dealGross as DealGross, sl_dealKey as DealKey,(sl_ftdpcadj + sl_BPP + sl_maint + sl_insurance + sl_leaseWnT + sl_etch + sl_otheram) as AdditionalGrossItems  FROM [SALESCOMMISSION].[dbo].[saleslog] S WHERE sl_VehicleStockNumber IN (SELECT STOCKNumber FROM [REYDATA].[dbo].[AgedUnits] WHERE [MONTH] = @ReportMonth AND [YEAR] = @ReportYear)  ORDER BY S.sl_VehicleDealDate, S.sl_VehicleLoc, sl_VehicleDaysInStock desc", new { StartDate = startDate, EndDate = endDate, ReportMonth = monthId, ReportYear = yearId }, "ReynoldsData");
-
-
-            //var soldVehicles = SqlMapperUtil.SqlWithParams<SoldVehicle>("Select distinct sell_price, stk_no, b_last, SUBSTRING(location,1,3) as loc, deal_date, category, daysinstk From FOXPROTABLES.dbo.RCI_Fimaster where deal_date between @StartDate and @EndDate  AND stk_no IN (SELECT STOCKNumber FROM [REYDATA].[dbo].[AgedUnits] WHERE [MONTH] = @ReportMonth AND [YEAR] = @ReportYear) and (status = 'F' or status = 'C') ORDER BY SUBSTRING(location,1,3), daysinstk desc", new { StartDate = startDate, EndDate = endDate, ReportMonth = monthId, ReportYear = yearId }, "ReynoldsData");
 
             return soldVehicles;
         }

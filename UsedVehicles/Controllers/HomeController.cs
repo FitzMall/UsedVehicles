@@ -17,83 +17,106 @@ namespace UsedVehicles.Controllers
             usedVehicleModel.MonthId = DateTime.Now.Month;
             usedVehicleModel.YearId = DateTime.Now.Year;
 
-            usedVehicleModel.UsedVehicles = SqlQueries.GetUsedVehicles(usedVehicleModel.MonthId, usedVehicleModel.YearId);
-            usedVehicleModel.RepoVehicles = SqlQueries.GetRepoVehicles(usedVehicleModel.MonthId, usedVehicleModel.YearId);
+            //try
+            //{
+            //    //usedVehicleModel.InventoryStatusHistory = new List<InventoryHistoryStatus>();
+            //    usedVehicleModel.InventoryStatusHistory = SqlQueries.GetInventoryHistory(usedVehicleModel.MonthId, usedVehicleModel.YearId);
+            //}
+            //catch (Exception ex)
+            //{
+            //    usedVehicleModel.InventoryStatusHistory = new List<InventoryHistoryStatus>();
+            //}
 
-            usedVehicleModel.AuctionVehicles = SqlQueries.GetAllUsedAuctionVehicles();
-            usedVehicleModel.OtherStatusVehicles = SqlQueries.GetAllOtherStatusVehicles();
-            usedVehicleModel.AllUsedVehicles = SqlQueries.GetAllUsedVehicles();
-            usedVehicleModel.AllVehicleNotes = SqlQueries.GetAllVehicleNotes();
-            usedVehicleModel.AllOpenRecalls = SqlQueries.GetAllOpenRecalls();
+            //usedVehicleModel.UsedVehicles = SqlQueries.GetUsedVehicles(usedVehicleModel.MonthId, usedVehicleModel.YearId);
+            //usedVehicleModel.RepoVehicles = SqlQueries.GetRepoVehicles(usedVehicleModel.MonthId, usedVehicleModel.YearId);
 
-            usedVehicleModel.NewStatus5Vehicles = SqlQueries.GetNewStatus5Vehicles();
-            usedVehicleModel.NewStatus20Vehicles = SqlQueries.GetNewStatus20Vehicles();
+            //usedVehicleModel.AuctionVehicles = SqlQueries.GetAllUsedAuctionVehicles();
+            //usedVehicleModel.OtherStatusVehicles = SqlQueries.GetAllOtherStatusVehicles();
+            //usedVehicleModel.AllUsedVehicles = SqlQueries.GetAllUsedVehicles();
+            //usedVehicleModel.AllVehicleNotes = SqlQueries.GetAllVehicleNotes();
+            //usedVehicleModel.AllOpenRecalls = SqlQueries.GetAllOpenRecalls();
 
-            try
-            {
-                //usedVehicleModel.InventoryStatusHistory = new List<InventoryHistoryStatus>();
-                usedVehicleModel.InventoryStatusHistory = SqlQueries.GetInventoryHistory();
-            }
-            catch (Exception ex)
-            {
-                usedVehicleModel.InventoryStatusHistory = new List<InventoryHistoryStatus>();
-            }
-
-            foreach (var vehicle in usedVehicleModel.UsedVehicles)
-            {
-                var liveVehicle = usedVehicleModel.AllUsedVehicles.Find(x => x.StockNumber.Trim() == vehicle.StockNumber.Trim());
-
-                if (liveVehicle != null && liveVehicle.ListAmount > 0)
-                {
-                    vehicle.NewListAmount = liveVehicle.ListAmount;
-                    vehicle.CurrentInvAmount = liveVehicle.CostAmount;
-                    vehicle.CurrentLocation = liveVehicle.Location;
-
-                    if(vehicle.CurrentLocation != vehicle.Location)
-                    {
-                        vehicle.Days4008 = liveVehicle.Days4008;
-                    }
-
-                }
-                else
-                {
-                    vehicle.CurrentInvAmount = vehicle.CostAmount;
-                }
-            }
-
-            usedVehicleModel.TransferredVehicles = usedVehicleModel.UsedVehicles.FindAll(x => x.CustomerName != null && x.CustomerName.StartsWith("Transfer"));
-            // Add Previously Transferred Vehicles that have not sold...
-            var previouslyTransferred = SqlQueries.GetPreviouslyTransferredUnits(usedVehicleModel.MonthId, usedVehicleModel.YearId);
-            foreach (var vehicle in previouslyTransferred)
-            {
-                var liveVehicle = usedVehicleModel.AllUsedVehicles.Find(x => x.StockNumber.Trim() == vehicle.StockNumber.Trim());
-
-                if (liveVehicle != null && liveVehicle.ListAmount > 0)
-                {
-                    vehicle.NewListAmount = liveVehicle.ListAmount;
-                    vehicle.CurrentInvAmount = liveVehicle.CostAmount;
-                    vehicle.CurrentLocation = liveVehicle.Location;
-
-                    if (vehicle.CurrentLocation != vehicle.Location)
-                    {
-                        vehicle.Days4008 = liveVehicle.Days4008;
-                    }
-
-                }
-                else
-                {
-                    vehicle.CurrentInvAmount = vehicle.CostAmount;
-                }
-            }
+            //usedVehicleModel.NewStatus5Vehicles = SqlQueries.GetNewStatus5Vehicles();
+            //usedVehicleModel.NewStatus20Vehicles = SqlQueries.GetNewStatus20Vehicles();
 
 
-            usedVehicleModel.TransferredVehicles.AddRange(previouslyTransferred);
+
+            //foreach (var vehicle in usedVehicleModel.UsedVehicles)
+            //{
+            //    var liveVehicle = usedVehicleModel.AllUsedVehicles.Find(x => x.StockNumber.Trim() == vehicle.StockNumber.Trim());
+
+            //    if (liveVehicle != null && liveVehicle.ListAmount > 0)
+            //    {
+            //        vehicle.NewListAmount = liveVehicle.ListAmount;
+            //        vehicle.CurrentInvAmount = liveVehicle.CostAmount;
+            //        vehicle.CurrentLocation = liveVehicle.Location;
+
+            //        if(vehicle.CurrentLocation != vehicle.Location)
+            //        {
+            //            vehicle.Days4008 = liveVehicle.Days4008;
+            //        }
+
+            //    }
+            //    else
+            //    {
+            //        //Might be sold, check the history
+            //       var history = usedVehicleModel.InventoryStatusHistory.FindAll(x => x.stk.Trim() == vehicle.StockNumber.Trim()).OrderByDescending(x=>Int32.Parse(x.days)).ToList();
+
+            //        if (history != null && history.Count() > 0)
+            //        {
+            //            vehicle.CurrentInvAmount = history[0].inv_amt;
+            //        }
+            //        else
+            //        {
+            //            vehicle.CurrentInvAmount = vehicle.CostAmount;
+            //        }
+
+            //    }
+            //}
+
+            //usedVehicleModel.TransferredVehicles = usedVehicleModel.UsedVehicles.FindAll(x => x.CustomerName != null && x.CustomerName.StartsWith("Transfer"));
+            //// Add Previously Transferred Vehicles that have not sold...
+            //var previouslyTransferred = SqlQueries.GetPreviouslyTransferredUnits(usedVehicleModel.MonthId, usedVehicleModel.YearId);
+            //foreach (var vehicle in previouslyTransferred)
+            //{
+            //    var liveVehicle = usedVehicleModel.AllUsedVehicles.Find(x => x.StockNumber.Trim() == vehicle.StockNumber.Trim());
+
+            //    if (liveVehicle != null && liveVehicle.ListAmount > 0)
+            //    {
+            //        vehicle.NewListAmount = liveVehicle.ListAmount;
+            //        vehicle.CurrentInvAmount = liveVehicle.CostAmount;
+            //        vehicle.CurrentLocation = liveVehicle.Location;
+
+            //        if (vehicle.CurrentLocation != vehicle.Location)
+            //        {
+            //            vehicle.Days4008 = liveVehicle.Days4008;
+            //        }
+
+            //    }
+            //    else
+            //    {
+            //        //Might be sold, check the history
+            //        var history = usedVehicleModel.InventoryStatusHistory.FindAll(x => x.stk.Trim() == vehicle.StockNumber.Trim()).OrderByDescending(x => Int32.Parse(x.days)).ToList();
+
+            //        if (history != null && history.Count() > 0)
+            //        {
+            //            vehicle.CurrentInvAmount = history[0].inv_amt;
+            //        }
+            //        else
+            //        {
+            //            vehicle.CurrentInvAmount = vehicle.CostAmount;
+            //        }
+            //    }
+            //}
 
 
-            //see if Transferred Vehicles have been sold?
-            usedVehicleModel.SoldVehicles = SqlQueries.GetSoldAndTransferredUnits(usedVehicleModel.MonthId, usedVehicleModel.YearId);
+            //usedVehicleModel.TransferredVehicles.AddRange(previouslyTransferred);
 
-            return View(usedVehicleModel);
+
+            ////see if Transferred Vehicles have been sold?
+            //usedVehicleModel.SoldVehicles = SqlQueries.GetSoldAndTransferredUnits(usedVehicleModel.MonthId, usedVehicleModel.YearId);
+
+             return View(usedVehicleModel);
         }
 
         [HttpPost]
@@ -113,7 +136,7 @@ namespace UsedVehicles.Controllers
             try
             {
                 //usedVehicleModel.InventoryStatusHistory = new List<InventoryHistoryStatus>();
-                usedVehicleModel.InventoryStatusHistory = SqlQueries.GetInventoryHistory();
+                usedVehicleModel.InventoryStatusHistory = SqlQueries.GetInventoryHistory(usedVehicleModel.MonthId, usedVehicleModel.YearId);
             }
             catch (Exception ex)
             {
@@ -172,6 +195,7 @@ namespace UsedVehicles.Controllers
             }
 
 
+
             foreach (var vehicle in usedVehicleModel.UsedVehicles)
             {
                 var liveVehicle = usedVehicleModel.AllUsedVehicles.Find(x => x.StockNumber.Trim() == vehicle.StockNumber.Trim());
@@ -190,7 +214,18 @@ namespace UsedVehicles.Controllers
                 }
                 else
                 {
-                    vehicle.CurrentInvAmount = vehicle.CostAmount;
+                    //Might be sold, check the history
+                    var history = usedVehicleModel.InventoryStatusHistory.FindAll(x => x.stk.Trim() == vehicle.StockNumber.Trim()).OrderByDescending(x => Int32.Parse(x.days)).ToList();
+
+                    if (history != null && history.Count() > 0)
+                    {
+                        vehicle.CurrentInvAmount = history[0].inv_amt;
+                    }
+                    else
+                    {
+                        vehicle.CurrentInvAmount = vehicle.CostAmount;
+                    }
+
                 }
             }
 
@@ -215,9 +250,21 @@ namespace UsedVehicles.Controllers
                 }
                 else
                 {
-                    vehicle.CurrentInvAmount = vehicle.CostAmount;
+                    //Might be sold, check the history
+                    var history = usedVehicleModel.InventoryStatusHistory.FindAll(x => x.stk.Trim() == vehicle.StockNumber.Trim()).OrderByDescending(x => Int32.Parse(x.days)).ToList();
+
+                    if (history != null && history.Count() > 0)
+                    {
+                        vehicle.CurrentInvAmount = history[0].inv_amt;
+                    }
+                    else
+                    {
+                        vehicle.CurrentInvAmount = vehicle.CostAmount;
+                    }
                 }
             }
+
+
             usedVehicleModel.TransferredVehicles.AddRange(previouslyTransferred);
 
             //see if Transferred Vehicles have been sold?

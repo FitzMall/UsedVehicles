@@ -66,6 +66,7 @@ namespace UsedVehicles.Models
         public string color { get; set; }
         public int status { get; set; }
         public decimal list_amt { get; set; }
+        public decimal inv_amt { get; set; }
         public DateTime updated { get; set; }
 
     }

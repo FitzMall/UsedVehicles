@@ -3784,8 +3784,12 @@
 
                                         //ProfitCurrentInvAmount = vehicle.NewListAmount - CurrentInvAmount;
                                         WriteDownAmount = ((vehicle.CostAmount - CurrentInvAmount) * -1);
-                                        WriteDownPercent = ((1 - (CurrentInvAmount / vehicle.CostAmount)));
+
                                         AllWDCount += 1;
+                                    }
+                                    if (vehicle.CostAmount > 0)
+                                    {
+                                        WriteDownPercent = ((1 - (CurrentInvAmount / vehicle.CostAmount)));
                                     }
 
                                     var profitWDbackgroundColor = "";
@@ -4324,8 +4328,12 @@
 
                                         //ProfitCurrentInvAmount = vehicle.NewListAmount - CurrentInvAmount;
                                         WriteDownAmount = ((vehicle.CostAmount - CurrentInvAmount) * -1);
-                                        WriteDownPercent = ((1 - (CurrentInvAmount / vehicle.CostAmount)));
                                         transfersWDCount += 1;
+                                    }
+
+                                    if (vehicle.CostAmount > 0)
+                                    {
+                                        WriteDownPercent = ((1 - (CurrentInvAmount / vehicle.CostAmount)));
                                     }
 
                                     var profitWDbackgroundColor = "";
@@ -4862,10 +4870,14 @@
 
                                                 //ProfitCurrentInvAmount = vehicle.NewListAmount - CurrentInvAmount;
                                                 WriteDownAmount = ((vehicle.CostAmount - CurrentInvAmount) * -1);
-                                                WriteDownPercent = ((1 - (CurrentInvAmount / vehicle.CostAmount)) );
+
                                                 StoreWDCount += 1;
                                             }
 
+                                            if(vehicle.CostAmount> 0)
+                                            {
+                                                WriteDownPercent = ((1 - (CurrentInvAmount / vehicle.CostAmount)));
+                                            }
                                             var profitWDbackgroundColor = "";
                                             if (vehicleProfitWD < 0)
                                             {
