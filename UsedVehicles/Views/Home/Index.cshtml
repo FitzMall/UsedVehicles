@@ -2448,7 +2448,7 @@
                     decimal Status14TotalVehicles = 0;
                     decimal Status14TotalAmount = 0;
                 }
-                <table class="table table-responsive table-bordered table-striped" id="status21-vehicles" style="font-size:11px;">
+                <table class="table table-responsive table-bordered table-striped" id="status14-vehicles" style="font-size:11px;">
                     <thead>
                         <tr style="background-color:#d9edf7">
                             <th class="text-center">Loc</th>
@@ -5116,12 +5116,16 @@
                                         {
                                             avgInvAmount = (StoreCostAmountTotal / StoreVehicleCount);
                                             avgListAmount = (StoreListAmountTotal / StoreVehicleCount);
-                                            avgNewInvAmount = (StoreNewCostAmountTotal / (StoreVehicleCount - StoreSoldCount));
+
                                             avgNewListAmount = (StoreNewListAmountTotal / StoreVehicleCount);
                                             avgOrigProfit = (StoreOrigProfitTotal / StoreVehicleCount);
                                             avgWDProfit = (StoreWDProfitTotal / StoreVehicleCount);
 
                                             avgPriceDays = (StorePriceTotal / StoreVehicleCount);
+                                        }
+                                        if ((StoreVehicleCount - StoreSoldCount) > 0)
+                                        {
+                                            avgNewInvAmount = (StoreNewCostAmountTotal / (StoreVehicleCount - StoreSoldCount));
                                         }
                                     }
                                     <tr style="background-color:#d9edf7">
