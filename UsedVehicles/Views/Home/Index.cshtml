@@ -121,19 +121,22 @@
                 <a class="nav-link" id="inventory-tab" data-toggle="tab" href="#inventory" role="tab" aria-controls="inventory" aria-selected="true">Inv Summary</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="status8-tab" data-toggle="tab" href="#status8" role="tab" aria-controls="status8" aria-selected="true">Status 8</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="status9-tab" data-toggle="tab" href="#status9" role="tab" aria-controls="status9" aria-selected="true">Status 9</a>
-            </li>    
-            <li class="nav-item">
                 <a class="nav-link" id="status3-tab" data-toggle="tab" href="#status3" role="tab" aria-controls="status3" aria-selected="true">Status 3</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="status5-tab" data-toggle="tab" href="#status5" role="tab" aria-controls="status5" aria-selected="true">Status 5</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="status21-tab" data-toggle="tab" href="#status21" role="tab" aria-controls="status21" aria-selected="true">Status 21</a>
+                <a class="nav-link" id="status8-tab" data-toggle="tab" href="#status8" role="tab" aria-controls="status8" aria-selected="true">Status 8</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="status9-tab" data-toggle="tab" href="#status9" role="tab" aria-controls="status9" aria-selected="true">Status 9</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="status12-tab" data-toggle="tab" href="#status12" role="tab" aria-controls="status12" aria-selected="true">Status 12</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="status13-tab" data-toggle="tab" href="#status13" role="tab" aria-controls="status13" aria-selected="true">Status 13</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="status14-tab" data-toggle="tab" href="#status14" role="tab" aria-controls="status14" aria-selected="true">Status 14</a>
@@ -143,6 +146,9 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="status20-tab" data-toggle="tab" href="#status20" role="tab" aria-controls="status20" aria-selected="true">Status 20</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="status21-tab" data-toggle="tab" href="#status21" role="tab" aria-controls="status21" aria-selected="true">Status 21</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="false">All</a>
@@ -3549,6 +3555,750 @@
                                 var vin = $(this).attr("data-vin");
 
                                 var url = "@applicationPath/Home/VehicleNotes/?status=21&vin=" + vin;
+                                var dialogBox = $("<div>");
+
+                                $(dialogBox).dialog({
+                                    resizable: false,
+                                    height: "auto",
+                                    width: dialogWidth,
+                                    position: { my: "center", at: "top+25%", of: window },
+                                    title: 'Update Vehicle Notes',
+                                    modal: true,
+                                    open: function (event, ui) {
+                                        $(this).load(url);
+                                        //$('#BonusDraws').validate();
+                                    },
+                                    buttons: {
+                                        "Save": function () {
+                                            var $this = this;
+                                            var form = $('#UpdateVehicleNotes', $this);
+                                            //if (!$(form).valid()) {
+                                            //    return false;
+                                            //}
+
+                                            $.ajax({
+                                                async: false,
+                                                type: 'POST',
+                                                url: form.attr("action"),
+                                                data: $(form).serialize(),
+                                                success: $($this).dialog("close").dialog("destroy").remove()
+                                            });
+
+                                            //location.reload();
+                                        },
+
+                                        "Close": function () {
+                                            $(this).dialog("close");
+                                            $(this).empty();
+                                        }
+                                    }
+                                });
+                                $(dialogBox).dialog('open');
+                            });
+                        });
+                </script>
+
+            </div>
+
+            <div class="tab-pane fade" id="status12" role="tabpanel" aria-labelledby="status12-tab">
+                <h3>Status 12 Vehicles</h3>
+
+                @{
+                    decimal Status12TotalVehicles = 0;
+                    decimal Status12TotalAmount = 0;
+                }
+                <table class="table table-responsive table-bordered table-striped" id="status12-vehicles" style="font-size:11px;">
+                    <thead>
+                        <tr style="background-color:#d9edf7">
+                            <th class="text-center">Loc</th>
+                            <th class="text-center">Stock #</th>
+                            <th class="text-center">Year</th>
+                            <th class="text-center">Make</th>
+                            <th class="text-center">Model</th>
+                            <th class="text-center">VIN</th>
+                            <th class="text-center">Exterior Color</th>
+                            <th class="text-center">Mileage</th>
+                            <th class="text-center">Cost Amount</th>
+                            <th class="text-center">Days in Inventory</th>
+                            <th class="text-center">Days at Status</th>
+
+                            <th class="text-center">Title Status</th>
+                            <th class="text-center">Notes</th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @{
+
+                            var status12Vehicles = Model.OtherStatusVehicles.FindAll(x => x.Status == 12);
+
+                            TotalClearTitle = 0;
+                            TotalTitleBank = 0;
+                            TotalTitleCustomer = 0;
+                            TotalTitleInterco = 0;
+                            TotalTitleAuction = 0;
+                            TotalLienBank = 0;
+                            TotalLienCustomer = 0;
+                            TotalOdomCustomer = 0;
+                            TotalPOACustomer = 0;
+                            TotalPayoffCustomer = 0;
+                            TotalOutStateTitle = 0;
+                            TotalDupTitle = 0;
+                            TotalOther = 0;
+                            TotalNoStatus = 0;
+
+                            TotalNoTitleDispose = 0;
+                            TotalETitle = 0;
+
+                            foreach (var vehicle in status12Vehicles)
+                            {
+                                var titleDue = titleStatus.Find(x => x.VIN == vehicle.VIN);
+
+                                var ManagerNoStatus = true;
+                                var status = "";
+
+                                if (titleDue != null)
+                                {
+                                    if (titleDue.ClearTitle)
+                                    {
+                                        status += "Clear Title, ";
+                                        TotalClearTitle += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.TitleDueBank)
+                                    {
+                                        status += "Title Bank, ";
+                                        TotalTitleBank += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.TitleDueCustomer)
+                                    {
+                                        status += "Title Customer, ";
+                                        TotalTitleCustomer += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.TitleDueInterco)
+                                    {
+                                        status += "Title Interco, ";
+                                        TotalTitleInterco += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.TitleDueAuction)
+                                    {
+                                        status += "Title Auction, ";
+                                        TotalTitleAuction += 1;
+                                        ManagerNoStatus = false;
+                                    }
+
+                                    if (titleDue.LienDueBank)
+                                    {
+                                        status += "Lien Bank, ";
+                                        TotalLienBank += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.LienDueCustomer)
+                                    {
+                                        status += "Lien Customer, ";
+                                        TotalLienCustomer += 1;
+                                        ManagerNoStatus = false;
+                                    }
+
+                                    if (titleDue.OdomDueCustomer)
+                                    {
+                                        status += "Odom Customer, ";
+                                        TotalOdomCustomer += 1;
+                                        ManagerNoStatus = false;
+                                    }
+
+                                    if (titleDue.POADueCust)
+                                    {
+                                        status += "POA Due, ";
+                                        TotalPOACustomer += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.PayoffDueCust)
+                                    {
+                                        status += "Payoff Due, ";
+                                        TotalPayoffCustomer += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.WaitingOutSTTitle)
+                                    {
+                                        status += "Waiting Out, ";
+                                        TotalOutStateTitle += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.DuplicateTitleAppliedFor)
+                                    {
+                                        status += "Dup Title, ";
+                                        TotalDupTitle += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.Other)
+                                    {
+                                        status += "Other, ";
+                                        TotalOther += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.NoTitleDispose)
+                                    {
+                                        status += "No Title Dispose, ";
+                                        TotalNoTitleDispose += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.ElectronicTitle)
+                                    {
+                                        status += "E-Title, ";
+                                        TotalETitle += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                }
+
+                                if (ManagerNoStatus)
+                                {
+                                    status = "No Status";
+                                    TotalNoStatus += 1;
+                                }
+                                status = status.TrimEnd(' ').TrimEnd(',');
+
+                                Status12TotalVehicles += 1;
+                                Status12TotalAmount += vehicle.CostAmount;
+
+                                var titleLink = "http://jjfserver/SalesCommission/Reports/UpdateTitleDue?vin=" + vehicle.VIN;
+                                if (ManagerNoStatus)
+                                {
+                                    titleLink = "http://jjfserver/SalesCommission/Reports/AddTitleDue?vin=" + vehicle.VIN;
+                                }
+
+                                var invHistory = Model.InventoryStatusHistory.FindAll(x => x.stk.Trim() == vehicle.StockNumber.Trim()).OrderByDescending(x => x.UCHISTID);
+                                var statusChangeDate = new DateTime();
+
+                                foreach (var hist in invHistory)
+                                {
+                                    if (hist.status != vehicle.Status)
+                                    {
+                                        statusChangeDate = hist.updated;
+                                        break;
+                                    }
+                                }
+
+                                Int32 invStatusDays = 0;
+                                if (statusChangeDate == new DateTime())
+                                {
+                                    invStatusDays = 0;// vehicle.DaysInventory;
+                                }
+                                else
+                                {
+                                    invStatusDays = (Int32)(DateTime.Now - statusChangeDate).TotalDays;
+                                }
+
+                                var vehicleNotes = Model.AllVehicleNotes.Find(x => x.VIN == vehicle.VIN && x.InventoryStatus == 12);
+                                var Notes = "";
+
+                                if (vehicleNotes != null)
+                                {
+                                    Notes = vehicleNotes.Notes;
+                                }
+
+                                <tr>
+                                    <td class="text-center">@vehicle.Location</td>
+                                    <td class="text-center">@vehicle.StockNumber</td>
+                                    <td class="text-center">@vehicle.ModelYear</td>
+                                    <td class="text-center">@vehicle.Make</td>
+                                    <td class="text-center">@vehicle.Model</td>
+                                    <td class="text-center">@vehicle.VIN</td>
+                                    <td class="text-center">@vehicle.Color</td>
+                                    <td class="text-center">@vehicle.Miles</td>
+                                    <td class="text-center">@vehicle.CostAmount.ToString("C", nfi)</td>
+                                    <td class="text-center">@vehicle.DaysInventory</td>
+                                    <td class="text-center">@invStatusDays</td>
+
+                                    <td class="text-center"><a href="@titleLink" target="blank">@status</a></td>
+                                    <td class="text-center">
+                                        <a class="status12editInfo" data-vin="@vehicle.VIN" data-stock="@vehicle.StockNumber"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a><br />
+                                        @if (Notes != null && Notes != "")
+                                        {
+                                            <a href="#" data-toggle="tooltip" title="@Notes">
+                                                <i class="fa fa-comments-o" aria-hidden="true"></i>
+                                            </a>
+                                        }
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr style="background-color:#d9edf7">
+                            <th class="text-center">Totals</th>
+                            <th class="text-center">@Status12TotalVehicles</th>
+                            <th class="text-center"></th>
+                            <th class="text-center"></th>
+                            <th class="text-center"></th>
+                            <th class="text-center"></th>
+                            <th class="text-center"></th>
+                            <th class="text-center"></th>
+                            <th class="text-center">@Status12TotalAmount.ToString("C", nfi)</th>
+
+
+                            <th class="text-right" colspan="3">
+                                ClearTitle<br />
+                                Title Due Bank<br />
+                                Title Due Customer<br />
+                                Title Due Interco<br />
+                                Title Due Auction<br />
+                                Lien Due Bank<br />
+                                Lien Due Customer<br />
+                                Odom Due Customer<br />
+                                POA Due Customer<br />
+                                Payoff Due Customer<br />
+                                Out of State Title<br />
+                                Duplicate Title<br />
+                                No Title Dispose<br />
+                                E-Title<br />
+                                Other<br />
+                                No Status<br />
+                            </th>
+                            <th class="text-center">
+                                @TotalClearTitle<br />
+                                @TotalTitleBank<br />
+                                @TotalTitleCustomer<br />
+                                @TotalTitleInterco<br />
+                                @TotalTitleAuction<br />
+                                @TotalLienBank<br />
+                                @TotalLienCustomer<br />
+                                @TotalOdomCustomer<br />
+                                @TotalPOACustomer<br />
+                                @TotalPayoffCustomer<br />
+                                @TotalOutStateTitle<br />
+                                @TotalDupTitle<br />
+                                @TotalNoTitleDispose<br />
+                                @TotalETitle<br />
+                                @TotalOther<br />
+                                @TotalNoStatus<br />
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#status12-vehicles').DataTable({
+                                searching: true,
+                                dom: 'Bfrtip',
+                                pageLength: -1,
+                                buttons: [
+                                    {
+                                        extend: 'copyHtml5', footer: true,
+                                    },
+                                    {
+                                        extend: 'excelHtml5', footer: true,
+                                    },
+                                    {
+                                        extend: 'pdfHtml5', footer: true,
+                                        orientation: 'landscape'
+                                    },
+                                    {
+                                        extend: 'print', footer: true,
+                                        orientation: 'landscape'
+                                    }
+                                ],
+                                columnDefs: [
+                                  { type: 'any-number', targets: [ 7, 8, 9, 10] },
+
+                                ]
+
+                            });
+                        });
+                        $(document).ready(function () {
+
+                            $('[data-toggle="tooltip"]').tooltip();
+
+                            var dialogWidth = 0;
+
+                            dialogWidth = ($(window).width() * .75);
+
+                            if ($(window).width() > 1199) {
+                                dialogWidth = 1200;
+                            }
+
+                            $('body').on('click', '.status12editInfo', function (event) {
+                                var vin = $(this).attr("data-vin");
+
+                                var url = "@applicationPath/Home/VehicleNotes/?status=12&vin=" + vin;
+                                var dialogBox = $("<div>");
+
+                                $(dialogBox).dialog({
+                                    resizable: false,
+                                    height: "auto",
+                                    width: dialogWidth,
+                                    position: { my: "center", at: "top+25%", of: window },
+                                    title: 'Update Vehicle Notes',
+                                    modal: true,
+                                    open: function (event, ui) {
+                                        $(this).load(url);
+                                        //$('#BonusDraws').validate();
+                                    },
+                                    buttons: {
+                                        "Save": function () {
+                                            var $this = this;
+                                            var form = $('#UpdateVehicleNotes', $this);
+                                            //if (!$(form).valid()) {
+                                            //    return false;
+                                            //}
+
+                                            $.ajax({
+                                                async: false,
+                                                type: 'POST',
+                                                url: form.attr("action"),
+                                                data: $(form).serialize(),
+                                                success: $($this).dialog("close").dialog("destroy").remove()
+                                            });
+
+                                            //location.reload();
+                                        },
+
+                                        "Close": function () {
+                                            $(this).dialog("close");
+                                            $(this).empty();
+                                        }
+                                    }
+                                });
+                                $(dialogBox).dialog('open');
+                            });
+                        });
+                </script>
+
+            </div>
+
+            <div class="tab-pane fade" id="status13" role="tabpanel" aria-labelledby="status13-tab">
+                <h3>Status 13 Vehicles</h3>
+
+                @{
+                    decimal Status13TotalVehicles = 0;
+                    decimal Status13TotalAmount = 0;
+                }
+                <table class="table table-responsive table-bordered table-striped" id="status13-vehicles" style="font-size:11px;">
+                    <thead>
+                        <tr style="background-color:#d9edf7">
+                            <th class="text-center">Loc</th>
+                            <th class="text-center">Stock #</th>
+                            <th class="text-center">Year</th>
+                            <th class="text-center">Make</th>
+                            <th class="text-center">Model</th>
+                            <th class="text-center">VIN</th>
+                            <th class="text-center">Exterior Color</th>
+                            <th class="text-center">Mileage</th>
+                            <th class="text-center">Cost Amount</th>
+                            <th class="text-center">Days in Inventory</th>
+                            <th class="text-center">Days at Status</th>
+
+                            <th class="text-center">Title Status</th>
+                            <th class="text-center">Notes</th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @{
+
+                            var status13Vehicles = Model.OtherStatusVehicles.FindAll(x => x.Status == 13);
+
+                            TotalClearTitle = 0;
+                            TotalTitleBank = 0;
+                            TotalTitleCustomer = 0;
+                            TotalTitleInterco = 0;
+                            TotalTitleAuction = 0;
+                            TotalLienBank = 0;
+                            TotalLienCustomer = 0;
+                            TotalOdomCustomer = 0;
+                            TotalPOACustomer = 0;
+                            TotalPayoffCustomer = 0;
+                            TotalOutStateTitle = 0;
+                            TotalDupTitle = 0;
+                            TotalOther = 0;
+                            TotalNoStatus = 0;
+
+                            TotalNoTitleDispose = 0;
+                            TotalETitle = 0;
+
+                            foreach (var vehicle in status13Vehicles)
+                            {
+                                var titleDue = titleStatus.Find(x => x.VIN == vehicle.VIN);
+
+                                var ManagerNoStatus = true;
+                                var status = "";
+
+                                if (titleDue != null)
+                                {
+                                    if (titleDue.ClearTitle)
+                                    {
+                                        status += "Clear Title, ";
+                                        TotalClearTitle += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.TitleDueBank)
+                                    {
+                                        status += "Title Bank, ";
+                                        TotalTitleBank += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.TitleDueCustomer)
+                                    {
+                                        status += "Title Customer, ";
+                                        TotalTitleCustomer += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.TitleDueInterco)
+                                    {
+                                        status += "Title Interco, ";
+                                        TotalTitleInterco += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.TitleDueAuction)
+                                    {
+                                        status += "Title Auction, ";
+                                        TotalTitleAuction += 1;
+                                        ManagerNoStatus = false;
+                                    }
+
+                                    if (titleDue.LienDueBank)
+                                    {
+                                        status += "Lien Bank, ";
+                                        TotalLienBank += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.LienDueCustomer)
+                                    {
+                                        status += "Lien Customer, ";
+                                        TotalLienCustomer += 1;
+                                        ManagerNoStatus = false;
+                                    }
+
+                                    if (titleDue.OdomDueCustomer)
+                                    {
+                                        status += "Odom Customer, ";
+                                        TotalOdomCustomer += 1;
+                                        ManagerNoStatus = false;
+                                    }
+
+                                    if (titleDue.POADueCust)
+                                    {
+                                        status += "POA Due, ";
+                                        TotalPOACustomer += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.PayoffDueCust)
+                                    {
+                                        status += "Payoff Due, ";
+                                        TotalPayoffCustomer += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.WaitingOutSTTitle)
+                                    {
+                                        status += "Waiting Out, ";
+                                        TotalOutStateTitle += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.DuplicateTitleAppliedFor)
+                                    {
+                                        status += "Dup Title, ";
+                                        TotalDupTitle += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.Other)
+                                    {
+                                        status += "Other, ";
+                                        TotalOther += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.NoTitleDispose)
+                                    {
+                                        status += "No Title Dispose, ";
+                                        TotalNoTitleDispose += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                    if (titleDue.ElectronicTitle)
+                                    {
+                                        status += "E-Title, ";
+                                        TotalETitle += 1;
+                                        ManagerNoStatus = false;
+                                    }
+                                }
+
+                                if (ManagerNoStatus)
+                                {
+                                    status = "No Status";
+                                    TotalNoStatus += 1;
+                                }
+                                status = status.TrimEnd(' ').TrimEnd(',');
+
+                                Status13TotalVehicles += 1;
+                                Status13TotalAmount += vehicle.CostAmount;
+
+                                var titleLink = "http://jjfserver/SalesCommission/Reports/UpdateTitleDue?vin=" + vehicle.VIN;
+                                if (ManagerNoStatus)
+                                {
+                                    titleLink = "http://jjfserver/SalesCommission/Reports/AddTitleDue?vin=" + vehicle.VIN;
+                                }
+
+                                var invHistory = Model.InventoryStatusHistory.FindAll(x => x.stk.Trim() == vehicle.StockNumber.Trim()).OrderByDescending(x => x.UCHISTID);
+                                var statusChangeDate = new DateTime();
+
+                                foreach (var hist in invHistory)
+                                {
+                                    if (hist.status != vehicle.Status)
+                                    {
+                                        statusChangeDate = hist.updated;
+                                        break;
+                                    }
+                                }
+
+                                Int32 invStatusDays = 0;
+                                if (statusChangeDate == new DateTime())
+                                {
+                                    invStatusDays = 0;// vehicle.DaysInventory;
+                                }
+                                else
+                                {
+                                    invStatusDays = (Int32)(DateTime.Now - statusChangeDate).TotalDays;
+                                }
+
+                                var vehicleNotes = Model.AllVehicleNotes.Find(x => x.VIN == vehicle.VIN && x.InventoryStatus == 13);
+                                var Notes = "";
+
+                                if (vehicleNotes != null)
+                                {
+                                    Notes = vehicleNotes.Notes;
+                                }
+
+                                <tr>
+                                    <td class="text-center">@vehicle.Location</td>
+                                    <td class="text-center">@vehicle.StockNumber</td>
+                                    <td class="text-center">@vehicle.ModelYear</td>
+                                    <td class="text-center">@vehicle.Make</td>
+                                    <td class="text-center">@vehicle.Model</td>
+                                    <td class="text-center">@vehicle.VIN</td>
+                                    <td class="text-center">@vehicle.Color</td>
+                                    <td class="text-center">@vehicle.Miles</td>
+                                    <td class="text-center">@vehicle.CostAmount.ToString("C", nfi)</td>
+                                    <td class="text-center">@vehicle.DaysInventory</td>
+                                    <td class="text-center">@invStatusDays</td>
+
+                                    <td class="text-center"><a href="@titleLink" target="blank">@status</a></td>
+                                    <td class="text-center">
+                                        <a class="status13editInfo" data-vin="@vehicle.VIN" data-stock="@vehicle.StockNumber"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a><br />
+                                        @if (Notes != null && Notes != "")
+                                        {
+                                            <a href="#" data-toggle="tooltip" title="@Notes">
+                                                <i class="fa fa-comments-o" aria-hidden="true"></i>
+                                            </a>
+                                        }
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr style="background-color:#d9edf7">
+                            <th class="text-center">Totals</th>
+                            <th class="text-center">@Status13TotalVehicles</th>
+                            <th class="text-center"></th>
+                            <th class="text-center"></th>
+                            <th class="text-center"></th>
+                            <th class="text-center"></th>
+                            <th class="text-center"></th>
+                            <th class="text-center"></th>
+                            <th class="text-center">@Status13TotalAmount.ToString("C", nfi)</th>
+
+
+                            <th class="text-right" colspan="3">
+                                ClearTitle<br />
+                                Title Due Bank<br />
+                                Title Due Customer<br />
+                                Title Due Interco<br />
+                                Title Due Auction<br />
+                                Lien Due Bank<br />
+                                Lien Due Customer<br />
+                                Odom Due Customer<br />
+                                POA Due Customer<br />
+                                Payoff Due Customer<br />
+                                Out of State Title<br />
+                                Duplicate Title<br />
+                                No Title Dispose<br />
+                                E-Title<br />
+                                Other<br />
+                                No Status<br />
+                            </th>
+                            <th class="text-center">
+                                @TotalClearTitle<br />
+                                @TotalTitleBank<br />
+                                @TotalTitleCustomer<br />
+                                @TotalTitleInterco<br />
+                                @TotalTitleAuction<br />
+                                @TotalLienBank<br />
+                                @TotalLienCustomer<br />
+                                @TotalOdomCustomer<br />
+                                @TotalPOACustomer<br />
+                                @TotalPayoffCustomer<br />
+                                @TotalOutStateTitle<br />
+                                @TotalDupTitle<br />
+                                @TotalNoTitleDispose<br />
+                                @TotalETitle<br />
+                                @TotalOther<br />
+                                @TotalNoStatus<br />
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#status13-vehicles').DataTable({
+                                searching: true,
+                                dom: 'Bfrtip',
+                                pageLength: -1,
+                                buttons: [
+                                    {
+                                        extend: 'copyHtml5', footer: true,
+                                    },
+                                    {
+                                        extend: 'excelHtml5', footer: true,
+                                    },
+                                    {
+                                        extend: 'pdfHtml5', footer: true,
+                                        orientation: 'landscape'
+                                    },
+                                    {
+                                        extend: 'print', footer: true,
+                                        orientation: 'landscape'
+                                    }
+                                ],
+                                columnDefs: [
+                                  { type: 'any-number', targets: [ 7, 8, 9, 10] },
+
+                                ]
+
+                            });
+                        });
+                        $(document).ready(function () {
+
+                            $('[data-toggle="tooltip"]').tooltip();
+
+                            var dialogWidth = 0;
+
+                            dialogWidth = ($(window).width() * .75);
+
+                            if ($(window).width() > 1199) {
+                                dialogWidth = 1200;
+                            }
+
+                            $('body').on('click', '.status13editInfo', function (event) {
+                                var vin = $(this).attr("data-vin");
+
+                                var url = "@applicationPath/Home/VehicleNotes/?status=13&vin=" + vin;
                                 var dialogBox = $("<div>");
 
                                 $(dialogBox).dialog({

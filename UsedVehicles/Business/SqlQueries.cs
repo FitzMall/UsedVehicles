@@ -239,7 +239,7 @@ namespace UsedVehicles.Business
 				and (OPTTYPE = 'FEA' and OPTCODE in (
                       'F906','F907','F908','F909','F910','F911','F912','F913','F916','F917','F918','F922','F923'
                       ))
-                 where C.status = 3 or C.status = 4 or C.status = 5 or C.status = 21 or C.status = 14 or C.status = 15 or C.status = 20";
+                 where C.status = 3 or C.status = 4 or C.status = 5 or C.status = 21 or C.status = 14 or C.status = 15 or C.status = 20 or C.status = 12 or C.status = 13";
 
             var usedVehicles = SqlMapperUtil.SqlWithParams<UsedVehicle>(sqlGet, new { }, "SQLServer");
 
