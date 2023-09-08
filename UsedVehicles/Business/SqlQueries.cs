@@ -433,7 +433,7 @@ namespace UsedVehicles.Business
             //var invHistory = SqlMapperUtil.SqlWithParams<InventoryHistoryStatus>(sqlGet, new { }, "FDServer");
 
             var x = new Cache();
-
+            
            List<InventoryHistoryStatus> invHistory = x["InvHistory"] as List<InventoryHistoryStatus>;
             if (invHistory == null) //not in cache
             {
