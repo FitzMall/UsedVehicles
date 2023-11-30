@@ -28,11 +28,11 @@ namespace UsedVehicles.Business
                 ,A.daysn as 'Days4008'
                 ,A.inv_amt as CostAmount
              from  [FITZWAY].[dbo].[Allinventory]  C
-                left JOIN [10.254.162.196].[FITZDB].[dbo].[UCMAS] A 
+                left JOIN [FITZDB].[dbo].[UCMAS] A 
                 ON A.vin = C.[V_Vin] and A.loc = C.V_loc
                 where V_nu = 'USED'";
 
-            var usedVehicles = SqlMapperUtil.SqlWithParams<UsedVehicle>(sqlGet, new { }, "Rackspace");
+            var usedVehicles = SqlMapperUtil.SqlWithParams<UsedVehicle>(sqlGet, new { }, "SQLServer");
 
             return usedVehicles;
 
