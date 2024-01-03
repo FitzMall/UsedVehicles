@@ -249,7 +249,7 @@ namespace UsedVehicles.Business
 
         public static List<TitleStatus> GetAllTitleStatus()
         {
-            var titleStatus = SqlMapperUtil.StoredProcWithParams<TitleStatus>("sp_SalesLogReportGetAllTitleStatus", null, "SalesCommission");
+            var titleStatus = SqlMapperUtil.StoredProcWithParams<TitleStatus>("sp_GetAllTitleStatus", null, "TitleDue");
             return titleStatus;
         }
 

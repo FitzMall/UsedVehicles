@@ -549,105 +549,85 @@
 
                                 if (titleDue != null)
                                 {
-                                    statusUpdated = titleDue.UpdateDate.ToShortDateString();
-                                    if (titleDue.ClearTitle)
+                                    status = titleDue.StatusDescription;
+
+                                    if (status == null || status == "")
                                     {
-                                        status += "Clear Title, ";
+                                        status = "No Status";
+                                    }
+
+                                    if (titleDue.ClearTitle == "Y" || status == "CLEAR")
+                                    {
+                                        status = "Clear Title";
                                         TotalClearTitle += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueBank)
-                                    {
-                                        status += "Title Bank, ";
-                                        TotalTitleBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueCustomer)
-                                    {
-                                        status += "Title Customer, ";
-                                        TotalTitleCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueInterco)
-                                    {
-                                        status += "Title Interco, ";
-                                        TotalTitleInterco += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueAuction)
-                                    {
-                                        status += "Title Auction, ";
-                                        TotalTitleAuction += 1;
-                                        ManagerNoStatus = false;
                                     }
 
-                                    if (titleDue.LienDueBank)
+                                    if (status == "OUT OF STATE")
                                     {
-                                        status += "Lien Bank, ";
-                                        TotalLienBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.LienDueCustomer)
-                                    {
-                                        status += "Lien Customer, ";
-                                        TotalLienCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.OdomDueCustomer)
-                                    {
-                                        status += "Odom Customer, ";
-                                        TotalOdomCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.POADueCust)
-                                    {
-                                        status += "POA Due, ";
-                                        TotalPOACustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.PayoffDueCust)
-                                    {
-                                        status += "Payoff Due, ";
-                                        TotalPayoffCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.WaitingOutSTTitle)
-                                    {
-                                        status += "Waiting Out, ";
                                         TotalOutStateTitle += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.DuplicateTitleAppliedFor)
+                                    if (status == "CUSTOMER OWES TITLE")
                                     {
-                                        status += "Dup Title, ";
-                                        TotalDupTitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalTitleCustomer += 1;
                                     }
-                                    if (titleDue.Other)
+                                    if (status == "CUSTOMER OWES ODOM")
                                     {
-                                        status += "Other, ";
+                                        TotalOdomCustomer += 1;
+                                    }
+                                    if (status == "OTHER")
+                                    {
                                         TotalOther += 1;
-                                        ManagerNoStatus = false;
+                                    }
+                                    if (status == "DUPLICATE")
+                                    {
+                                        TotalDupTitle += 1;
+                                    }
+                                    if (status == "CUSTOMER OWES POA")
+                                    {
+                                        TotalPOACustomer += 1;
+                                    }
+                                    if (status == "BANK OWES LIEN")
+                                    {
+                                        TotalLienBank += 1;
+                                    }
+                                    if (status == "BANK OWES TITLE")
+                                    {
+                                        TotalTitleBank += 1;
+                                    }
+                                    if (status == "CUSTOMER OWES LIEN")
+                                    {
+                                        TotalLienCustomer += 1;
+                                    }
+                                    if (status == "INTERCOMPANY")
+                                    {
+                                        TotalTitleInterco += 1;
+                                    }
+                                    if (status == "AUCTION")
+                                    {
+                                        TotalTitleAuction += 1;
                                     }
 
-                                    if (titleDue.NoTitleDispose)
-                                    {
-                                        status += "No Title Dispose, ";
-                                        TotalNoTitleDispose += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.ElectronicTitle)
-                                    {
-                                        status += "E-Title, ";
-                                        TotalETitle += 1;
-                                        ManagerNoStatus = false;
-                                    }
+
+                                    statusUpdated = titleDue.UpdatedDate.ToShortDateString();
+
+                                    //TotalTitleBank += 1;
+                                    //TotalTitleCustomer += 1;
+                                    //TotalTitleInterco += 1;
+                                    //TotalTitleAuction += 1;
+                                    //TotalLienBank += 1;
+                                    //TotalLienCustomer += 1;
+                                    //TotalOdomCustomer += 1;
+                                    //TotalPOACustomer += 1;
+                                    //TotalPayoffCustomer += 1;
+                                    //TotalOutStateTitle += 1;
+                                    //TotalDupTitle += 1;
+                                    //TotalOther += 1;
+                                    //TotalNoTitleDispose += 1;
+                                    //TotalETitle += 1;
+
 
                                 }
-
-                                if (ManagerNoStatus)
+                                else
                                 {
                                     status = "No Status";
                                     TotalNoStatus += 1;
@@ -710,7 +690,7 @@
                                     <td class="text-center">@vehicle.DaysInventory</td>
                                     <td class="text-center">@invStatusDays</td>
                                     <td class="text-center">@vehicle.CostAmount.ToString("C", nfi)</td>
-                                    <td class="text-center"><a href="@titleLink" target="blank">@status</a></td>
+                                    <td class="text-center">@status</td>
                                     <td class="text-center">@statusUpdated</td>
                                     <td class="text-center">@vehicle.Memo2</td>
                                     <td class="text-center">@lotLocation</td>
@@ -949,103 +929,69 @@
 
                                 if (titleDue != null)
                                 {
-                                    statusUpdated = titleDue.UpdateDate.ToShortDateString();
-                                    if (titleDue.ClearTitle)
+                                    statusUpdated = titleDue.UpdatedDate.ToShortDateString();
+                                    status = titleDue.StatusDescription;
+
+                                    if (status == null || status == "")
                                     {
-                                        status += "Clear Title, ";
+                                        status = "No Status";
+                                        TotalNoStatus += 1;
+                                    }
+
+                                    if (titleDue.ClearTitle == "Y" || status == "CLEAR")
+                                    {
+                                        status = "Clear Title";
                                         TotalClearTitle += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.TitleDueBank)
+                                    
+                                    if (status == "OUT OF STATE")
                                     {
-                                        status += "Title Bank, ";
-                                        TotalTitleBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueCustomer)
-                                    {
-                                        status += "Title Customer, ";
-                                        TotalTitleCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueInterco)
-                                    {
-                                        status += "Title Interco, ";
-                                        TotalTitleInterco += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueAuction)
-                                    {
-                                        status += "Title Auction, ";
-                                        TotalTitleAuction += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.LienDueBank)
-                                    {
-                                        status += "Lien Bank, ";
-                                        TotalLienBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.LienDueCustomer)
-                                    {
-                                        status += "Lien Customer, ";
-                                        TotalLienCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.OdomDueCustomer)
-                                    {
-                                        status += "Odom Customer, ";
-                                        TotalOdomCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.POADueCust)
-                                    {
-                                        status += "POA Due, ";
-                                        TotalPOACustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.PayoffDueCust)
-                                    {
-                                        status += "Payoff Due, ";
-                                        TotalPayoffCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.WaitingOutSTTitle)
-                                    {
-                                        status += "Waiting Out, ";
                                         TotalOutStateTitle += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.DuplicateTitleAppliedFor)
+                                    if (status == "CUSTOMER OWES TITLE")
                                     {
-                                        status += "Dup Title, ";
-                                        TotalDupTitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalTitleCustomer += 1;
                                     }
-                                    if (titleDue.Other)
+                                    if (status == "CUSTOMER OWES ODOM")
                                     {
-                                        status += "Other, ";
+                                        TotalOdomCustomer += 1;
+                                    }
+                                    if (status == "OTHER")
+                                    {
                                         TotalOther += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.NoTitleDispose)
+                                    if (status == "DUPLICATE")
                                     {
-                                        status += "No Title Dispose, ";
-                                        TotalNoTitleDispose += 1;
-                                        ManagerNoStatus = false;
+                                        TotalDupTitle += 1;
                                     }
-                                    if (titleDue.ElectronicTitle)
+                                    if (status == "CUSTOMER OWES POA")
                                     {
-                                        status += "E-Title, ";
-                                        TotalETitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalPOACustomer += 1;
                                     }
-                                }
+                                    if (status == "BANK OWES LIEN")
+                                    {
+                                        TotalLienBank += 1;
+                                    }
+                                    if (status == "BANK OWES TITLE")
+                                    {
+                                        TotalTitleBank +=1;
+                                    }
+                                    if (status == "CUSTOMER OWES LIEN")
+                                    {
+                                        TotalLienCustomer += 1;
+                                    }
+                                    if (status == "INTERCOMPANY")
+                                    {
+                                        TotalTitleInterco += 1;
+                                    }
+                                    if (status == "AUCTION")
+                                    {
+                                        TotalTitleAuction += 1;
+                                    }
 
-                                if (ManagerNoStatus)
+
+                                }
+                                else
                                 {
                                     status = "No Status";
                                     TotalNoStatus += 1;
@@ -1114,7 +1060,7 @@
                                     <td class="text-center">@invStatusDays</td>
 
                                     <td class="text-center">@vehicle.CostAmount.ToString("C", nfi)</td>
-                                    <td class="text-center"><a href="@titleLink" target="blank">@status</a></td>
+                                    <td class="text-center">@status</td>
                                     <td class="text-center">@statusUpdated</td>
                                     <td class="text-center">@vehicle.Memo2</td>
                                     <td class="text-center">@lotLocation</td>
@@ -1349,102 +1295,67 @@
 
                                 if (titleDue != null)
                                 {
-                                    if (titleDue.ClearTitle)
+                                    status = titleDue.StatusDescription;
+
+                                    if (status == null || status == "")
                                     {
-                                        status += "Clear Title, ";
+                                        status = "No Status";
+                                    }
+
+                                    if (titleDue.ClearTitle == "Y" || status == "CLEAR")
+                                    {
+                                        status = "Clear Title";
                                         TotalClearTitle += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueBank)
-                                    {
-                                        status += "Title Bank, ";
-                                        TotalTitleBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueCustomer)
-                                    {
-                                        status += "Title Customer, ";
-                                        TotalTitleCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueInterco)
-                                    {
-                                        status += "Title Interco, ";
-                                        TotalTitleInterco += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueAuction)
-                                    {
-                                        status += "Title Auction, ";
-                                        TotalTitleAuction += 1;
-                                        ManagerNoStatus = false;
                                     }
 
-                                    if (titleDue.LienDueBank)
+                                    if (status == "OUT OF STATE")
                                     {
-                                        status += "Lien Bank, ";
-                                        TotalLienBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.LienDueCustomer)
-                                    {
-                                        status += "Lien Customer, ";
-                                        TotalLienCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.OdomDueCustomer)
-                                    {
-                                        status += "Odom Customer, ";
-                                        TotalOdomCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.POADueCust)
-                                    {
-                                        status += "POA Due, ";
-                                        TotalPOACustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.PayoffDueCust)
-                                    {
-                                        status += "Payoff Due, ";
-                                        TotalPayoffCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.WaitingOutSTTitle)
-                                    {
-                                        status += "Waiting Out, ";
                                         TotalOutStateTitle += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.DuplicateTitleAppliedFor)
+                                    if (status == "CUSTOMER OWES TITLE")
                                     {
-                                        status += "Dup Title, ";
-                                        TotalDupTitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalTitleCustomer += 1;
                                     }
-                                    if (titleDue.Other)
+                                    if (status == "CUSTOMER OWES ODOM")
                                     {
-                                        status += "Other, ";
+                                        TotalOdomCustomer += 1;
+                                    }
+                                    if (status == "OTHER")
+                                    {
                                         TotalOther += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.NoTitleDispose)
+                                    if (status == "DUPLICATE")
                                     {
-                                        status += "No Title Dispose, ";
-                                        TotalNoTitleDispose += 1;
-                                        ManagerNoStatus = false;
+                                        TotalDupTitle += 1;
                                     }
-                                    if (titleDue.ElectronicTitle)
+                                    if (status == "CUSTOMER OWES POA")
                                     {
-                                        status += "E-Title, ";
-                                        TotalETitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalPOACustomer += 1;
                                     }
-                                }
+                                    if (status == "BANK OWES LIEN")
+                                    {
+                                        TotalLienBank += 1;
+                                    }
+                                    if (status == "BANK OWES TITLE")
+                                    {
+                                        TotalTitleBank += 1;
+                                    }
+                                    if (status == "CUSTOMER OWES LIEN")
+                                    {
+                                        TotalLienCustomer += 1;
+                                    }
+                                    if (status == "INTERCOMPANY")
+                                    {
+                                        TotalTitleInterco += 1;
+                                    }
+                                    if (status == "AUCTION")
+                                    {
+                                        TotalTitleAuction += 1;
+                                    }
 
-                                if (ManagerNoStatus)
+
+                                }
+                                else
                                 {
                                     status = "No Status";
                                     TotalNoStatus += 1;
@@ -1512,7 +1423,7 @@
                                     <td class="text-center">@invStatusDays</td>
                                    
                                     <td class="text-center">@vehicle.CostAmount.ToString("C", nfi)</td>
-                                    <td class="text-center"><a href="@titleLink" target="blank">@status</a></td>
+                                    <td class="text-center">@status</td>
                                     <td class="text-center">@vehicle.Memo1</td>
                                     <td class="text-center">@vehicle.Memo2</td>
                                     <td class="text-center">@vehicle.RODate.ToShortDateString()</td>
@@ -1752,102 +1663,68 @@
 
                                 if (titleDue != null)
                                 {
-                                    if (titleDue.ClearTitle)
+                                    status = titleDue.StatusDescription;
+
+                                    if (status == null || status == "")
                                     {
-                                        status += "Clear Title, ";
+                                        status = "No Status";
+                                    }
+
+                                    if (titleDue.ClearTitle == "Y" || status == "CLEAR")
+                                    {
+                                        status = "Clear Title";
                                         TotalClearTitle += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueBank)
-                                    {
-                                        status += "Title Bank, ";
-                                        TotalTitleBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueCustomer)
-                                    {
-                                        status += "Title Customer, ";
-                                        TotalTitleCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueInterco)
-                                    {
-                                        status += "Title Interco, ";
-                                        TotalTitleInterco += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueAuction)
-                                    {
-                                        status += "Title Auction, ";
-                                        TotalTitleAuction += 1;
-                                        ManagerNoStatus = false;
                                     }
 
-                                    if (titleDue.LienDueBank)
+                                    if (status == "OUT OF STATE")
                                     {
-                                        status += "Lien Bank, ";
-                                        TotalLienBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.LienDueCustomer)
-                                    {
-                                        status += "Lien Customer, ";
-                                        TotalLienCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.OdomDueCustomer)
-                                    {
-                                        status += "Odom Customer, ";
-                                        TotalOdomCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.POADueCust)
-                                    {
-                                        status += "POA Due, ";
-                                        TotalPOACustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.PayoffDueCust)
-                                    {
-                                        status += "Payoff Due, ";
-                                        TotalPayoffCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.WaitingOutSTTitle)
-                                    {
-                                        status += "Waiting Out, ";
                                         TotalOutStateTitle += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.DuplicateTitleAppliedFor)
+                                    if (status == "CUSTOMER OWES TITLE")
                                     {
-                                        status += "Dup Title, ";
-                                        TotalDupTitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalTitleCustomer += 1;
                                     }
-                                    if (titleDue.Other)
+                                    if (status == "CUSTOMER OWES ODOM")
                                     {
-                                        status += "Other, ";
+                                        TotalOdomCustomer += 1;
+                                    }
+                                    if (status == "OTHER")
+                                    {
                                         TotalOther += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.NoTitleDispose)
+                                    if (status == "DUPLICATE")
                                     {
-                                        status += "No Title Dispose, ";
-                                        TotalNoTitleDispose += 1;
-                                        ManagerNoStatus = false;
+                                        TotalDupTitle += 1;
                                     }
-                                    if (titleDue.ElectronicTitle)
+                                    if (status == "CUSTOMER OWES POA")
                                     {
-                                        status += "E-Title, ";
-                                        TotalETitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalPOACustomer += 1;
                                     }
-                                }
+                                    if (status == "BANK OWES LIEN")
+                                    {
+                                        TotalLienBank += 1;
+                                    }
+                                    if (status == "BANK OWES TITLE")
+                                    {
+                                        TotalTitleBank += 1;
+                                    }
+                                    if (status == "CUSTOMER OWES LIEN")
+                                    {
+                                        TotalLienCustomer += 1;
+                                    }
+                                    if (status == "INTERCOMPANY")
+                                    {
+                                        TotalTitleInterco += 1;
+                                    }
+                                    if (status == "AUCTION")
+                                    {
+                                        TotalTitleAuction += 1;
+                                    }
 
-                                if (ManagerNoStatus)
+
+
+                                }
+                                else
                                 {
                                     status = "No Status";
                                     TotalNoStatus += 1;
@@ -2135,102 +2012,68 @@
 
                                 if (titleDue != null)
                                 {
-                                    if (titleDue.ClearTitle)
+                                    status = titleDue.StatusDescription;
+
+                                    if (status == null || status == "")
                                     {
-                                        status += "Clear Title, ";
+                                        status = "No Status";
+                                    }
+
+                                    if (titleDue.ClearTitle == "Y" || status == "CLEAR")
+                                    {
+                                        status = "Clear Title";
                                         TotalClearTitle += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueBank)
-                                    {
-                                        status += "Title Bank, ";
-                                        TotalTitleBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueCustomer)
-                                    {
-                                        status += "Title Customer, ";
-                                        TotalTitleCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueInterco)
-                                    {
-                                        status += "Title Interco, ";
-                                        TotalTitleInterco += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueAuction)
-                                    {
-                                        status += "Title Auction, ";
-                                        TotalTitleAuction += 1;
-                                        ManagerNoStatus = false;
                                     }
 
-                                    if (titleDue.LienDueBank)
+                                    if (status == "OUT OF STATE")
                                     {
-                                        status += "Lien Bank, ";
-                                        TotalLienBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.LienDueCustomer)
-                                    {
-                                        status += "Lien Customer, ";
-                                        TotalLienCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.OdomDueCustomer)
-                                    {
-                                        status += "Odom Customer, ";
-                                        TotalOdomCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.POADueCust)
-                                    {
-                                        status += "POA Due, ";
-                                        TotalPOACustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.PayoffDueCust)
-                                    {
-                                        status += "Payoff Due, ";
-                                        TotalPayoffCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.WaitingOutSTTitle)
-                                    {
-                                        status += "Waiting Out, ";
                                         TotalOutStateTitle += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.DuplicateTitleAppliedFor)
+                                    if (status == "CUSTOMER OWES TITLE")
                                     {
-                                        status += "Dup Title, ";
-                                        TotalDupTitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalTitleCustomer += 1;
                                     }
-                                    if (titleDue.Other)
+                                    if (status == "CUSTOMER OWES ODOM")
                                     {
-                                        status += "Other, ";
+                                        TotalOdomCustomer += 1;
+                                    }
+                                    if (status == "OTHER")
+                                    {
                                         TotalOther += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.NoTitleDispose)
+                                    if (status == "DUPLICATE")
                                     {
-                                        status += "No Title Dispose, ";
-                                        TotalNoTitleDispose += 1;
-                                        ManagerNoStatus = false;
+                                        TotalDupTitle += 1;
                                     }
-                                    if (titleDue.ElectronicTitle)
+                                    if (status == "CUSTOMER OWES POA")
                                     {
-                                        status += "E-Title, ";
-                                        TotalETitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalPOACustomer += 1;
                                     }
+                                    if (status == "BANK OWES LIEN")
+                                    {
+                                        TotalLienBank += 1;
+                                    }
+                                    if (status == "BANK OWES TITLE")
+                                    {
+                                        TotalTitleBank += 1;
+                                    }
+                                    if (status == "CUSTOMER OWES LIEN")
+                                    {
+                                        TotalLienCustomer += 1;
+                                    }
+                                    if (status == "INTERCOMPANY")
+                                    {
+                                        TotalTitleInterco += 1;
+                                    }
+                                    if (status == "AUCTION")
+                                    {
+                                        TotalTitleAuction += 1;
+                                    }
+
+
                                 }
 
-                                if (ManagerNoStatus)
+                                else
                                 {
                                     status = "No Status";
                                     TotalNoStatus += 1;
@@ -2289,7 +2132,7 @@
                                     <td class="text-center">@vehicle.DaysInventory</td>
                                     <td class="text-center">@invStatusDays</td>
                                    
-                                    <td class="text-center"><a href="@titleLink" target="blank">@status</a></td>
+                                    <td class="text-center">@status</td>
                                     <td class="text-center">
                                         <a class="status21editInfo" data-vin="@vehicle.VIN" data-stock="@vehicle.StockNumber"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a><br />
                                         @if (Notes != null && Notes != "")
@@ -2507,102 +2350,67 @@
 
                                 if (titleDue != null)
                                 {
-                                    if (titleDue.ClearTitle)
+                                    status = titleDue.StatusDescription;
+
+                                    if (status == null || status == "")
                                     {
-                                        status += "Clear Title, ";
+                                        status = "No Status";
+                                    }
+
+                                    if (titleDue.ClearTitle == "Y" || status == "CLEAR")
+                                    {
+                                        status = "Clear Title";
                                         TotalClearTitle += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueBank)
-                                    {
-                                        status += "Title Bank, ";
-                                        TotalTitleBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueCustomer)
-                                    {
-                                        status += "Title Customer, ";
-                                        TotalTitleCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueInterco)
-                                    {
-                                        status += "Title Interco, ";
-                                        TotalTitleInterco += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueAuction)
-                                    {
-                                        status += "Title Auction, ";
-                                        TotalTitleAuction += 1;
-                                        ManagerNoStatus = false;
                                     }
 
-                                    if (titleDue.LienDueBank)
+                                    if (status == "OUT OF STATE")
                                     {
-                                        status += "Lien Bank, ";
-                                        TotalLienBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.LienDueCustomer)
-                                    {
-                                        status += "Lien Customer, ";
-                                        TotalLienCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.OdomDueCustomer)
-                                    {
-                                        status += "Odom Customer, ";
-                                        TotalOdomCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.POADueCust)
-                                    {
-                                        status += "POA Due, ";
-                                        TotalPOACustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.PayoffDueCust)
-                                    {
-                                        status += "Payoff Due, ";
-                                        TotalPayoffCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.WaitingOutSTTitle)
-                                    {
-                                        status += "Waiting Out, ";
                                         TotalOutStateTitle += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.DuplicateTitleAppliedFor)
+                                    if (status == "CUSTOMER OWES TITLE")
                                     {
-                                        status += "Dup Title, ";
-                                        TotalDupTitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalTitleCustomer += 1;
                                     }
-                                    if (titleDue.Other)
+                                    if (status == "CUSTOMER OWES ODOM")
                                     {
-                                        status += "Other, ";
+                                        TotalOdomCustomer += 1;
+                                    }
+                                    if (status == "OTHER")
+                                    {
                                         TotalOther += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.NoTitleDispose)
+                                    if (status == "DUPLICATE")
                                     {
-                                        status += "No Title Dispose, ";
-                                        TotalNoTitleDispose += 1;
-                                        ManagerNoStatus = false;
+                                        TotalDupTitle += 1;
                                     }
-                                    if (titleDue.ElectronicTitle)
+                                    if (status == "CUSTOMER OWES POA")
                                     {
-                                        status += "E-Title, ";
-                                        TotalETitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalPOACustomer += 1;
                                     }
-                                }
+                                    if (status == "BANK OWES LIEN")
+                                    {
+                                        TotalLienBank += 1;
+                                    }
+                                    if (status == "BANK OWES TITLE")
+                                    {
+                                        TotalTitleBank += 1;
+                                    }
+                                    if (status == "CUSTOMER OWES LIEN")
+                                    {
+                                        TotalLienCustomer += 1;
+                                    }
+                                    if (status == "INTERCOMPANY")
+                                    {
+                                        TotalTitleInterco += 1;
+                                    }
+                                    if (status == "AUCTION")
+                                    {
+                                        TotalTitleAuction += 1;
+                                    }
 
-                                if (ManagerNoStatus)
+
+                                }
+                                else
                                 {
                                     status = "No Status";
                                     TotalNoStatus += 1;
@@ -2661,7 +2469,7 @@
                                     <td class="text-center">@vehicle.DaysInventory</td>
                                     <td class="text-center">@invStatusDays</td>
                                     
-                                    <td class="text-center"><a href="@titleLink" target="blank">@status</a></td>
+                                    <td class="text-center">@status</td>
                                     <td class="text-center">
                                         <a class="status21editInfo" data-vin="@vehicle.VIN" data-stock="@vehicle.StockNumber"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a><br />
                                         @if (Notes != null && Notes != "")
@@ -2884,102 +2692,67 @@
 
                                 if (titleDue != null)
                                 {
-                                    if (titleDue.ClearTitle)
+                                    status = titleDue.StatusDescription;
+
+                                    if (status == null || status == "")
                                     {
-                                        status += "Clear Title, ";
+                                        status = "No Status";
+                                    }
+
+                                    if (titleDue.ClearTitle == "Y" || status == "CLEAR")
+                                    {
+                                        status = "Clear Title";
                                         TotalClearTitle += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueBank)
-                                    {
-                                        status += "Title Bank, ";
-                                        TotalTitleBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueCustomer)
-                                    {
-                                        status += "Title Customer, ";
-                                        TotalTitleCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueInterco)
-                                    {
-                                        status += "Title Interco, ";
-                                        TotalTitleInterco += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueAuction)
-                                    {
-                                        status += "Title Auction, ";
-                                        TotalTitleAuction += 1;
-                                        ManagerNoStatus = false;
                                     }
 
-                                    if (titleDue.LienDueBank)
+                                    if (status == "OUT OF STATE")
                                     {
-                                        status += "Lien Bank, ";
-                                        TotalLienBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.LienDueCustomer)
-                                    {
-                                        status += "Lien Customer, ";
-                                        TotalLienCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.OdomDueCustomer)
-                                    {
-                                        status += "Odom Customer, ";
-                                        TotalOdomCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.POADueCust)
-                                    {
-                                        status += "POA Due, ";
-                                        TotalPOACustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.PayoffDueCust)
-                                    {
-                                        status += "Payoff Due, ";
-                                        TotalPayoffCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.WaitingOutSTTitle)
-                                    {
-                                        status += "Waiting Out, ";
                                         TotalOutStateTitle += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.DuplicateTitleAppliedFor)
+                                    if (status == "CUSTOMER OWES TITLE")
                                     {
-                                        status += "Dup Title, ";
-                                        TotalDupTitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalTitleCustomer += 1;
                                     }
-                                    if (titleDue.Other)
+                                    if (status == "CUSTOMER OWES ODOM")
                                     {
-                                        status += "Other, ";
+                                        TotalOdomCustomer += 1;
+                                    }
+                                    if (status == "OTHER")
+                                    {
                                         TotalOther += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.NoTitleDispose)
+                                    if (status == "DUPLICATE")
                                     {
-                                        status += "No Title Dispose, ";
-                                        TotalNoTitleDispose += 1;
-                                        ManagerNoStatus = false;
+                                        TotalDupTitle += 1;
                                     }
-                                    if (titleDue.ElectronicTitle)
+                                    if (status == "CUSTOMER OWES POA")
                                     {
-                                        status += "E-Title, ";
-                                        TotalETitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalPOACustomer += 1;
                                     }
-                                }
+                                    if (status == "BANK OWES LIEN")
+                                    {
+                                        TotalLienBank += 1;
+                                    }
+                                    if (status == "BANK OWES TITLE")
+                                    {
+                                        TotalTitleBank += 1;
+                                    }
+                                    if (status == "CUSTOMER OWES LIEN")
+                                    {
+                                        TotalLienCustomer += 1;
+                                    }
+                                    if (status == "INTERCOMPANY")
+                                    {
+                                        TotalTitleInterco += 1;
+                                    }
+                                    if (status == "AUCTION")
+                                    {
+                                        TotalTitleAuction += 1;
+                                    }
 
-                                if (ManagerNoStatus)
+
+                                }
+                                else
                                 {
                                     status = "No Status";
                                     TotalNoStatus += 1;
@@ -3048,7 +2821,7 @@
                                     <td class="text-center">@invStatusDays</td>
                                   
                                     <td class="text-center">@vehicle.CostAmount.ToString("C", nfi)</td>
-                                    <td class="text-center"><a href="@titleLink" target="blank">@status</a></td>
+                                    <td class="text-center">@status</td>
                                     <td class="text-center">@vehicle.Memo1</td>
                                     <td class="text-center">@vehicle.Memo2</td>
                                     
@@ -3261,7 +3034,7 @@
 
                             var status20Vehicles = Model.OtherStatusVehicles.FindAll(x => x.Status == 20);
                             status20Vehicles.AddRange(Model.NewStatus20Vehicles);
-                            
+
                             TotalClearTitle = 0;
                             TotalTitleBank = 0;
                             TotalTitleCustomer = 0;
@@ -3289,102 +3062,67 @@
 
                                 if (titleDue != null)
                                 {
-                                    if (titleDue.ClearTitle)
+                                    status = titleDue.StatusDescription;
+
+                                    if (status == null || status == "")
                                     {
-                                        status += "Clear Title, ";
+                                        status = "No Status";
+                                    }
+
+                                    if (titleDue.ClearTitle == "Y" || status == "CLEAR")
+                                    {
+                                        status = "Clear Title";
                                         TotalClearTitle += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueBank)
-                                    {
-                                        status += "Title Bank, ";
-                                        TotalTitleBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueCustomer)
-                                    {
-                                        status += "Title Customer, ";
-                                        TotalTitleCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueInterco)
-                                    {
-                                        status += "Title Interco, ";
-                                        TotalTitleInterco += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueAuction)
-                                    {
-                                        status += "Title Auction, ";
-                                        TotalTitleAuction += 1;
-                                        ManagerNoStatus = false;
                                     }
 
-                                    if (titleDue.LienDueBank)
+                                    if (status == "OUT OF STATE")
                                     {
-                                        status += "Lien Bank, ";
-                                        TotalLienBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.LienDueCustomer)
-                                    {
-                                        status += "Lien Customer, ";
-                                        TotalLienCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.OdomDueCustomer)
-                                    {
-                                        status += "Odom Customer, ";
-                                        TotalOdomCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.POADueCust)
-                                    {
-                                        status += "POA Due, ";
-                                        TotalPOACustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.PayoffDueCust)
-                                    {
-                                        status += "Payoff Due, ";
-                                        TotalPayoffCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.WaitingOutSTTitle)
-                                    {
-                                        status += "Waiting Out, ";
                                         TotalOutStateTitle += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.DuplicateTitleAppliedFor)
+                                    if (status == "CUSTOMER OWES TITLE")
                                     {
-                                        status += "Dup Title, ";
-                                        TotalDupTitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalTitleCustomer += 1;
                                     }
-                                    if (titleDue.Other)
+                                    if (status == "CUSTOMER OWES ODOM")
                                     {
-                                        status += "Other, ";
+                                        TotalOdomCustomer += 1;
+                                    }
+                                    if (status == "OTHER")
+                                    {
                                         TotalOther += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.NoTitleDispose)
+                                    if (status == "DUPLICATE")
                                     {
-                                        status += "No Title Dispose, ";
-                                        TotalNoTitleDispose += 1;
-                                        ManagerNoStatus = false;
+                                        TotalDupTitle += 1;
                                     }
-                                    if (titleDue.ElectronicTitle)
+                                    if (status == "CUSTOMER OWES POA")
                                     {
-                                        status += "E-Title, ";
-                                        TotalETitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalPOACustomer += 1;
                                     }
-                                }
+                                    if (status == "BANK OWES LIEN")
+                                    {
+                                        TotalLienBank += 1;
+                                    }
+                                    if (status == "BANK OWES TITLE")
+                                    {
+                                        TotalTitleBank += 1;
+                                    }
+                                    if (status == "CUSTOMER OWES LIEN")
+                                    {
+                                        TotalLienCustomer += 1;
+                                    }
+                                    if (status == "INTERCOMPANY")
+                                    {
+                                        TotalTitleInterco += 1;
+                                    }
+                                    if (status == "AUCTION")
+                                    {
+                                        TotalTitleAuction += 1;
+                                    }
 
-                                if (ManagerNoStatus)
+
+                                }
+                                else
                                 {
                                     status = "No Status";
                                     TotalNoStatus += 1;
@@ -3443,7 +3181,7 @@
                                     <td class="text-center">@vehicle.DaysInventory</td>
                                     <td class="text-center">@invStatusDays</td>
                                   
-                                    <td class="text-center"><a href="@titleLink" target="blank">@status</a></td>
+                                    <td class="text-center">@status</td>
                                     <td class="text-center">
                                         <a class="status20editInfo" data-vin="@vehicle.VIN" data-stock="@vehicle.StockNumber"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a><br />
                                         @if (Notes != null && Notes != "")
@@ -3660,102 +3398,67 @@
 
                                 if (titleDue != null)
                                 {
-                                    if (titleDue.ClearTitle)
+                                    status = titleDue.StatusDescription;
+
+                                    if (status == null || status == "")
                                     {
-                                        status += "Clear Title, ";
+                                        status = "No Status";
+                                    }
+
+                                    if (titleDue.ClearTitle == "Y" || status == "CLEAR")
+                                    {
+                                        status = "Clear Title";
                                         TotalClearTitle += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueBank)
-                                    {
-                                        status += "Title Bank, ";
-                                        TotalTitleBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueCustomer)
-                                    {
-                                        status += "Title Customer, ";
-                                        TotalTitleCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueInterco)
-                                    {
-                                        status += "Title Interco, ";
-                                        TotalTitleInterco += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueAuction)
-                                    {
-                                        status += "Title Auction, ";
-                                        TotalTitleAuction += 1;
-                                        ManagerNoStatus = false;
                                     }
 
-                                    if (titleDue.LienDueBank)
+                                    if (status == "OUT OF STATE")
                                     {
-                                        status += "Lien Bank, ";
-                                        TotalLienBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.LienDueCustomer)
-                                    {
-                                        status += "Lien Customer, ";
-                                        TotalLienCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.OdomDueCustomer)
-                                    {
-                                        status += "Odom Customer, ";
-                                        TotalOdomCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.POADueCust)
-                                    {
-                                        status += "POA Due, ";
-                                        TotalPOACustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.PayoffDueCust)
-                                    {
-                                        status += "Payoff Due, ";
-                                        TotalPayoffCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.WaitingOutSTTitle)
-                                    {
-                                        status += "Waiting Out, ";
                                         TotalOutStateTitle += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.DuplicateTitleAppliedFor)
+                                    if (status == "CUSTOMER OWES TITLE")
                                     {
-                                        status += "Dup Title, ";
-                                        TotalDupTitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalTitleCustomer += 1;
                                     }
-                                    if (titleDue.Other)
+                                    if (status == "CUSTOMER OWES ODOM")
                                     {
-                                        status += "Other, ";
+                                        TotalOdomCustomer += 1;
+                                    }
+                                    if (status == "OTHER")
+                                    {
                                         TotalOther += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.NoTitleDispose)
+                                    if (status == "DUPLICATE")
                                     {
-                                        status += "No Title Dispose, ";
-                                        TotalNoTitleDispose += 1;
-                                        ManagerNoStatus = false;
+                                        TotalDupTitle += 1;
                                     }
-                                    if (titleDue.ElectronicTitle)
+                                    if (status == "CUSTOMER OWES POA")
                                     {
-                                        status += "E-Title, ";
-                                        TotalETitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalPOACustomer += 1;
                                     }
-                                }
+                                    if (status == "BANK OWES LIEN")
+                                    {
+                                        TotalLienBank += 1;
+                                    }
+                                    if (status == "BANK OWES TITLE")
+                                    {
+                                        TotalTitleBank += 1;
+                                    }
+                                    if (status == "CUSTOMER OWES LIEN")
+                                    {
+                                        TotalLienCustomer += 1;
+                                    }
+                                    if (status == "INTERCOMPANY")
+                                    {
+                                        TotalTitleInterco += 1;
+                                    }
+                                    if (status == "AUCTION")
+                                    {
+                                        TotalTitleAuction += 1;
+                                    }
 
-                                if (ManagerNoStatus)
+
+                                }
+                                else
                                 {
                                     status = "No Status";
                                     TotalNoStatus += 1;
@@ -3814,7 +3517,7 @@
                                     <td class="text-center">@vehicle.DaysInventory</td>
                                     <td class="text-center">@invStatusDays</td>
 
-                                    <td class="text-center"><a href="@titleLink" target="blank">@status</a></td>
+                                    <td class="text-center">@status</td>
                                     <td class="text-center">
                                         <a class="status12editInfo" data-vin="@vehicle.VIN" data-stock="@vehicle.StockNumber"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a><br />
                                         @if (Notes != null && Notes != "")
@@ -4032,102 +3735,67 @@
 
                                 if (titleDue != null)
                                 {
-                                    if (titleDue.ClearTitle)
+                                    status = titleDue.StatusDescription;
+
+                                    if (status == null || status == "")
                                     {
-                                        status += "Clear Title, ";
+                                        status = "No Status";
+                                    }
+
+                                    if (titleDue.ClearTitle == "Y" || status == "CLEAR")
+                                    {
+                                        status = "Clear Title";
                                         TotalClearTitle += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueBank)
-                                    {
-                                        status += "Title Bank, ";
-                                        TotalTitleBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueCustomer)
-                                    {
-                                        status += "Title Customer, ";
-                                        TotalTitleCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueInterco)
-                                    {
-                                        status += "Title Interco, ";
-                                        TotalTitleInterco += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.TitleDueAuction)
-                                    {
-                                        status += "Title Auction, ";
-                                        TotalTitleAuction += 1;
-                                        ManagerNoStatus = false;
                                     }
 
-                                    if (titleDue.LienDueBank)
+                                    if (status == "OUT OF STATE")
                                     {
-                                        status += "Lien Bank, ";
-                                        TotalLienBank += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.LienDueCustomer)
-                                    {
-                                        status += "Lien Customer, ";
-                                        TotalLienCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.OdomDueCustomer)
-                                    {
-                                        status += "Odom Customer, ";
-                                        TotalOdomCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-
-                                    if (titleDue.POADueCust)
-                                    {
-                                        status += "POA Due, ";
-                                        TotalPOACustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.PayoffDueCust)
-                                    {
-                                        status += "Payoff Due, ";
-                                        TotalPayoffCustomer += 1;
-                                        ManagerNoStatus = false;
-                                    }
-                                    if (titleDue.WaitingOutSTTitle)
-                                    {
-                                        status += "Waiting Out, ";
                                         TotalOutStateTitle += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.DuplicateTitleAppliedFor)
+                                    if (status == "CUSTOMER OWES TITLE")
                                     {
-                                        status += "Dup Title, ";
-                                        TotalDupTitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalTitleCustomer += 1;
                                     }
-                                    if (titleDue.Other)
+                                    if (status == "CUSTOMER OWES ODOM")
                                     {
-                                        status += "Other, ";
+                                        TotalOdomCustomer += 1;
+                                    }
+                                    if (status == "OTHER")
+                                    {
                                         TotalOther += 1;
-                                        ManagerNoStatus = false;
                                     }
-                                    if (titleDue.NoTitleDispose)
+                                    if (status == "DUPLICATE")
                                     {
-                                        status += "No Title Dispose, ";
-                                        TotalNoTitleDispose += 1;
-                                        ManagerNoStatus = false;
+                                        TotalDupTitle += 1;
                                     }
-                                    if (titleDue.ElectronicTitle)
+                                    if (status == "CUSTOMER OWES POA")
                                     {
-                                        status += "E-Title, ";
-                                        TotalETitle += 1;
-                                        ManagerNoStatus = false;
+                                        TotalPOACustomer += 1;
                                     }
-                                }
+                                    if (status == "BANK OWES LIEN")
+                                    {
+                                        TotalLienBank += 1;
+                                    }
+                                    if (status == "BANK OWES TITLE")
+                                    {
+                                        TotalTitleBank += 1;
+                                    }
+                                    if (status == "CUSTOMER OWES LIEN")
+                                    {
+                                        TotalLienCustomer += 1;
+                                    }
+                                    if (status == "INTERCOMPANY")
+                                    {
+                                        TotalTitleInterco += 1;
+                                    }
+                                    if (status == "AUCTION")
+                                    {
+                                        TotalTitleAuction += 1;
+                                    }
 
-                                if (ManagerNoStatus)
+
+                                }
+                                else
                                 {
                                     status = "No Status";
                                     TotalNoStatus += 1;
@@ -4186,7 +3854,7 @@
                                     <td class="text-center">@vehicle.DaysInventory</td>
                                     <td class="text-center">@invStatusDays</td>
 
-                                    <td class="text-center"><a href="@titleLink" target="blank">@status</a></td>
+                                    <td class="text-center">@status</td>
                                     <td class="text-center">
                                         <a class="status13editInfo" data-vin="@vehicle.VIN" data-stock="@vehicle.StockNumber"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a><br />
                                         @if (Notes != null && Notes != "")

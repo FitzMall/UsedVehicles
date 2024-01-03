@@ -143,8 +143,24 @@ namespace UsedVehicles.Models
         public decimal AdditionalGrossItems { get; set; }
     }
 
-
     public class TitleStatus
+    {
+        public string Store { get; set; }
+        public string Location { get; set; }
+        public string Status { get; set; }
+        public string StockNumber { get; set; }
+        public string VIN { get; set; }
+        public DateTime RcptDate { get; set; }
+        public string ClearTitle { get; set; }
+        public string TitleStatusText { get; set; }
+        public string TitleNote { get; set; }
+        public string StatusDescription { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime UpdatedDate { get; set; }
+
+    }
+
+    public class OldTitleStatus
     {
         public int Id { get; set; }
         public int DealId { get; set; }

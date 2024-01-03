@@ -382,95 +382,108 @@ namespace UsedVehicles.Controllers
                 {
                     var titleDue = titleStatus.Find(x => x.VIN == vehicle.VIN);
 
-                    var ManagerNoStatus = true;
+                    //var ManagerNoStatus = true;
                     var status = "";
 
                     if (titleDue != null)
                     {
-                        if (titleDue.ClearTitle)
+                        status = titleDue.TitleStatusText;
+
+                        if (status == null || status == "")
                         {
-                            status += "Clear Title, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.TitleDueBank)
-                        {
-                            status += "Title Bank, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.TitleDueCustomer)
-                        {
-                            status += "Title Customer, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.TitleDueInterco)
-                        {
-                            status += "Title Interco, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.TitleDueAuction)
-                        {
-                            status += "Title Auction, ";
-                            ManagerNoStatus = false;
+                            status = "No Status";
                         }
 
-                        if (titleDue.LienDueBank)
+                        if (titleDue.ClearTitle == "Y")
                         {
-                            status += "Lien Bank, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.LienDueCustomer)
-                        {
-                            status += "Lien Customer, ";
-                            ManagerNoStatus = false;
+                            status = "Clear Title";
                         }
 
-                        if (titleDue.OdomDueCustomer)
-                        {
-                            status += "Odom Customer, ";
-                            ManagerNoStatus = false;
-                        }
 
-                        if (titleDue.POADueCust)
-                        {
-                            status += "POA Due, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.PayoffDueCust)
-                        {
-                            status += "Payoff Due, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.WaitingOutSTTitle)
-                        {
-                            status += "Waiting Out, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.DuplicateTitleAppliedFor)
-                        {
-                            status += "Dup Title, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.Other)
-                        {
-                            status += "Other, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.NoTitleDispose)
-                        {
-                            status += "No Title Dispose, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.ElectronicTitle)
-                        {
-                            status += "E-Title, ";
-                            ManagerNoStatus = false;
-                        }
+                        //if (titleDue.ClearTitle)
+                        //{
+                        //    status += "Clear Title, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.TitleDueBank)
+                        //{
+                        //    status += "Title Bank, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.TitleDueCustomer)
+                        //{
+                        //    status += "Title Customer, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.TitleDueInterco)
+                        //{
+                        //    status += "Title Interco, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.TitleDueAuction)
+                        //{
+                        //    status += "Title Auction, ";
+                        //    ManagerNoStatus = false;
+                        //}
+
+                        //if (titleDue.LienDueBank)
+                        //{
+                        //    status += "Lien Bank, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.LienDueCustomer)
+                        //{
+                        //    status += "Lien Customer, ";
+                        //    ManagerNoStatus = false;
+                        //}
+
+                        //if (titleDue.OdomDueCustomer)
+                        //{
+                        //    status += "Odom Customer, ";
+                        //    ManagerNoStatus = false;
+                        //}
+
+                        //if (titleDue.POADueCust)
+                        //{
+                        //    status += "POA Due, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.PayoffDueCust)
+                        //{
+                        //    status += "Payoff Due, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.WaitingOutSTTitle)
+                        //{
+                        //    status += "Waiting Out, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.DuplicateTitleAppliedFor)
+                        //{
+                        //    status += "Dup Title, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.Other)
+                        //{
+                        //    status += "Other, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.NoTitleDispose)
+                        //{
+                        //    status += "No Title Dispose, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.ElectronicTitle)
+                        //{
+                        //    status += "E-Title, ";
+                        //    ManagerNoStatus = false;
+                        //}
                     }
-
-                    if (ManagerNoStatus)
+                    else
                     {
                         status = "No Status";
                     }
+
                     status = status.TrimEnd(' ').TrimEnd(',');
 
                     vehicle.TitleStatus = status;
@@ -576,96 +589,111 @@ namespace UsedVehicles.Controllers
 
                 var titleDue = titleStatus.Find(x => x.VIN == vehicle.VIN);
 
-                var ManagerNoStatus = true;
+                //var ManagerNoStatus = true;
                 var status = "";
 
                 if (titleDue != null)
                 {
-                    if (titleDue.ClearTitle)
+                    status = titleDue.TitleStatusText;
+
+                    if (status == null || status == "")
                     {
-                        status += "Clear Title, ";
-                        ManagerNoStatus = false;
-                    }
-                    if (titleDue.TitleDueBank)
-                    {
-                        status += "Title Bank, ";
-                        ManagerNoStatus = false;
-                    }
-                    if (titleDue.TitleDueCustomer)
-                    {
-                        status += "Title Customer, ";
-                        ManagerNoStatus = false;
-                    }
-                    if (titleDue.TitleDueInterco)
-                    {
-                        status += "Title Interco, ";
-                        ManagerNoStatus = false;
-                    }
-                    if (titleDue.TitleDueAuction)
-                    {
-                        status += "Title Auction, ";
-                        ManagerNoStatus = false;
+                        status = "No Status";
                     }
 
-                    if (titleDue.LienDueBank)
+                    if (titleDue.ClearTitle == "Y")
                     {
-                        status += "Lien Bank, ";
-                        ManagerNoStatus = false;
-                    }
-                    if (titleDue.LienDueCustomer)
-                    {
-                        status += "Lien Customer, ";
-                        ManagerNoStatus = false;
+                        status = "Clear Title";
                     }
 
-                    if (titleDue.OdomDueCustomer)
-                    {
-                        status += "Odom Customer, ";
-                        ManagerNoStatus = false;
-                    }
+                    //if (titleDue.ClearTitle)
+                    //{
+                    //    status += "Clear Title, ";
+                    //    ManagerNoStatus = false;
+                    //}
+                    //if (titleDue.TitleDueBank)
+                    //{
+                    //    status += "Title Bank, ";
+                    //    ManagerNoStatus = false;
+                    //}
+                    //if (titleDue.TitleDueCustomer)
+                    //{
+                    //    status += "Title Customer, ";
+                    //    ManagerNoStatus = false;
+                    //}
+                    //if (titleDue.TitleDueInterco)
+                    //{
+                    //    status += "Title Interco, ";
+                    //    ManagerNoStatus = false;
+                    //}
+                    //if (titleDue.TitleDueAuction)
+                    //{
+                    //    status += "Title Auction, ";
+                    //    ManagerNoStatus = false;
+                    //}
 
-                    if (titleDue.POADueCust)
-                    {
-                        status += "POA Due, ";
-                        ManagerNoStatus = false;
-                    }
-                    if (titleDue.PayoffDueCust)
-                    {
-                        status += "Payoff Due, ";
-                        ManagerNoStatus = false;
-                    }
-                    if (titleDue.WaitingOutSTTitle)
-                    {
-                        status += "Waiting Out, ";
-                        ManagerNoStatus = false;
-                    }
-                    if (titleDue.DuplicateTitleAppliedFor)
-                    {
-                        status += "Dup Title, ";
-                        ManagerNoStatus = false;
-                    }
-                    if (titleDue.Other)
-                    {
-                        status += "Other, ";
-                        ManagerNoStatus = false;
-                    }
+                    //if (titleDue.LienDueBank)
+                    //{
+                    //    status += "Lien Bank, ";
+                    //    ManagerNoStatus = false;
+                    //}
+                    //if (titleDue.LienDueCustomer)
+                    //{
+                    //    status += "Lien Customer, ";
+                    //    ManagerNoStatus = false;
+                    //}
 
-                    if (titleDue.NoTitleDispose)
-                    {
-                        status += "No Title Dispose, ";
-                        ManagerNoStatus = false;
-                    }
-                    if (titleDue.ElectronicTitle)
-                    {
-                        status += "E-Title, ";
-                        ManagerNoStatus = false;
-                    }
+                    //if (titleDue.OdomDueCustomer)
+                    //{
+                    //    status += "Odom Customer, ";
+                    //    ManagerNoStatus = false;
+                    //}
+
+                    //if (titleDue.POADueCust)
+                    //{
+                    //    status += "POA Due, ";
+                    //    ManagerNoStatus = false;
+                    //}
+                    //if (titleDue.PayoffDueCust)
+                    //{
+                    //    status += "Payoff Due, ";
+                    //    ManagerNoStatus = false;
+                    //}
+                    //if (titleDue.WaitingOutSTTitle)
+                    //{
+                    //    status += "Waiting Out, ";
+                    //    ManagerNoStatus = false;
+                    //}
+                    //if (titleDue.DuplicateTitleAppliedFor)
+                    //{
+                    //    status += "Dup Title, ";
+                    //    ManagerNoStatus = false;
+                    //}
+                    //if (titleDue.Other)
+                    //{
+                    //    status += "Other, ";
+                    //    ManagerNoStatus = false;
+                    //}
+
+                    //if (titleDue.NoTitleDispose)
+                    //{
+                    //    status += "No Title Dispose, ";
+                    //    ManagerNoStatus = false;
+                    //}
+                    //if (titleDue.ElectronicTitle)
+                    //{
+                    //    status += "E-Title, ";
+                    //    ManagerNoStatus = false;
+                    //}
                 }
-
-                if (ManagerNoStatus)
+                else
                 {
                     status = "No Status";
                 }
+                //if (ManagerNoStatus)
+                //{
+                //    status = "No Status";
+                //}
                 status = status.TrimEnd(' ').TrimEnd(',');
 
                 vehicle.TitleStatus = status;
@@ -754,140 +782,7 @@ namespace UsedVehicles.Controllers
         {
             var usedVehicleModel = new UsedInventoryStatusModel();
 
-            //var allUsedVehicles = SqlQueries.GetAllUsedVehicles();
             
-           
-            //var auctionVehicles = SqlQueries.GetAllUsedAuctionVehicles();
-            //if(auctionVehicles != null)
-            //{
-            //    allUsedVehicles.AddRange(auctionVehicles);
-            //}
-
-            //var otherStatusVehicles = SqlQueries.GetAllOtherStatusVehicles();
-            //if(otherStatusVehicles != null)
-            //{
-            //    allUsedVehicles.AddRange(otherStatusVehicles);
-            //}
-
-            //usedVehicleModel.AllUsedVehicles = allUsedVehicles;
-
-            //var titleStatus = UsedVehicles.Business.SqlQueries.GetAllTitleStatus();
-
-            //var allPriceChanges = SqlQueries.GetAllVehiclePriceChanges();
-
-            //var vehiclePriceChanges = new List<VehiclePriceChange>();
-
-
-            //if (usedVehicleModel.AllUsedVehicles != null)
-            //{
-            //    foreach (var vehicle in usedVehicleModel.AllUsedVehicles)
-            //    {
-
-            //        var priceChanges = allPriceChanges.FindAll(x => x.StockNumber == vehicle.StockNumber).OrderByDescending(x => x.PriceDate).ToList();
-
-            //        try
-            //        {
-            //            var lastChange = priceChanges.First(x => x.ListAmount != vehicle.ListAmount);
-
-            //            if (lastChange != null && lastChange.ListAmount != 0)
-            //            {
-            //                vehiclePriceChanges.Add(lastChange);
-            //            }
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            //Item not found, so skip it!
-            //        }
-
-            //        var titleDue = titleStatus.Find(x => x.VIN == vehicle.VIN);
-
-            //        var ManagerNoStatus = true;
-            //        var status = "";
-
-            //        if (titleDue != null)
-            //        {
-            //            if (titleDue.ClearTitle)
-            //            {
-            //                status += "Clear Title, ";
-            //                ManagerNoStatus = false;
-            //            }
-            //            if (titleDue.TitleDueBank)
-            //            {
-            //                status += "Title Bank, ";
-            //                ManagerNoStatus = false;
-            //            }
-            //            if (titleDue.TitleDueCustomer)
-            //            {
-            //                status += "Title Customer, ";
-            //                ManagerNoStatus = false;
-            //            }
-            //            if (titleDue.TitleDueInterco)
-            //            {
-            //                status += "Title Interco, ";
-            //                ManagerNoStatus = false;
-            //            }
-            //            if (titleDue.TitleDueAuction)
-            //            {
-            //                status += "Title Auction, ";
-            //                ManagerNoStatus = false;
-            //            }
-
-            //            if (titleDue.LienDueBank)
-            //            {
-            //                status += "Lien Bank, ";
-            //                ManagerNoStatus = false;
-            //            }
-            //            if (titleDue.LienDueCustomer)
-            //            {
-            //                status += "Lien Customer, ";
-            //                ManagerNoStatus = false;
-            //            }
-
-            //            if (titleDue.OdomDueCustomer)
-            //            {
-            //                status += "Odom Customer, ";
-            //                ManagerNoStatus = false;
-            //            }
-
-            //            if (titleDue.POADueCust)
-            //            {
-            //                status += "POA Due, ";
-            //                ManagerNoStatus = false;
-            //            }
-            //            if (titleDue.PayoffDueCust)
-            //            {
-            //                status += "Payoff Due, ";
-            //                ManagerNoStatus = false;
-            //            }
-            //            if (titleDue.WaitingOutSTTitle)
-            //            {
-            //                status += "Waiting Out, ";
-            //                ManagerNoStatus = false;
-            //            }
-            //            if (titleDue.DuplicateTitleAppliedFor)
-            //            {
-            //                status += "Dup Title, ";
-            //                ManagerNoStatus = false;
-            //            }
-            //            if (titleDue.Other)
-            //            {
-            //                status += "Other, ";
-            //                ManagerNoStatus = false;
-            //            }
-            //        }
-
-            //        if (ManagerNoStatus)
-            //        {
-            //            status = "No Status";
-            //        }
-            //        status = status.TrimEnd(' ').TrimEnd(',');
-
-            //        vehicle.TitleStatus = status;
-            //    }
-            //}
-
-            //usedVehicleModel.VehiclePriceChanges = vehiclePriceChanges;
-
             usedVehicleModel.Location = "ALL";
             
             usedVehicleModel.TitleStatus = new string[1];
@@ -989,92 +884,107 @@ namespace UsedVehicles.Controllers
 
                     var titleDue = titleStatus.Find(x => x.VIN == vehicle.VIN);
 
-                    var ManagerNoStatus = true;
+                    //var ManagerNoStatus = true;
                     var status = "";
 
                     if (titleDue != null)
                     {
-                        if (titleDue.ClearTitle)
+                        status = titleDue.TitleStatusText;
+
+                        if(status == null || status == "")
                         {
-                            status += "Clear Title, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.TitleDueBank)
-                        {
-                            status += "Title Bank, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.TitleDueCustomer)
-                        {
-                            status += "Title Customer, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.TitleDueInterco)
-                        {
-                            status += "Title Interco, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.TitleDueAuction)
-                        {
-                            status += "Title Auction, ";
-                            ManagerNoStatus = false;
+                            status = "No Status";
                         }
 
-                        if (titleDue.LienDueBank)
+                        if(titleDue.ClearTitle == "Y")
                         {
-                            status += "Lien Bank, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.LienDueCustomer)
-                        {
-                            status += "Lien Customer, ";
-                            ManagerNoStatus = false;
+                            status = "Clear Title";
                         }
 
-                        if (titleDue.OdomDueCustomer)
-                        {
-                            status += "Odom Customer, ";
-                            ManagerNoStatus = false;
-                        }
+                        //if (titleDue.ClearTitle)
+                        //{
+                        //    status += "Clear Title, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.TitleDueBank)
+                        //{
+                        //    status += "Title Bank, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.TitleDueCustomer)
+                        //{
+                        //    status += "Title Customer, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.TitleDueInterco)
+                        //{
+                        //    status += "Title Interco, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.TitleDueAuction)
+                        //{
+                        //    status += "Title Auction, ";
+                        //    ManagerNoStatus = false;
+                        //}
 
-                        if (titleDue.POADueCust)
-                        {
-                            status += "POA Due, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.PayoffDueCust)
-                        {
-                            status += "Payoff Due, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.WaitingOutSTTitle)
-                        {
-                            status += "Waiting Out, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.DuplicateTitleAppliedFor)
-                        {
-                            status += "Dup Title, ";
-                            ManagerNoStatus = false;
-                        }
-                        if (titleDue.Other)
-                        {
-                            status += "Other, ";
-                            ManagerNoStatus = false;
-                        }
+                        //if (titleDue.LienDueBank)
+                        //{
+                        //    status += "Lien Bank, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.LienDueCustomer)
+                        //{
+                        //    status += "Lien Customer, ";
+                        //    ManagerNoStatus = false;
+                        //}
+
+                        //if (titleDue.OdomDueCustomer)
+                        //{
+                        //    status += "Odom Customer, ";
+                        //    ManagerNoStatus = false;
+                        //}
+
+                        //if (titleDue.POADueCust)
+                        //{
+                        //    status += "POA Due, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.PayoffDueCust)
+                        //{
+                        //    status += "Payoff Due, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.WaitingOutSTTitle)
+                        //{
+                        //    status += "Waiting Out, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.DuplicateTitleAppliedFor)
+                        //{
+                        //    status += "Dup Title, ";
+                        //    ManagerNoStatus = false;
+                        //}
+                        //if (titleDue.Other)
+                        //{
+                        //    status += "Other, ";
+                        //    ManagerNoStatus = false;
+                        //}
                     }
-
-                    if (ManagerNoStatus)
+                    else
                     {
                         status = "No Status";
                     }
+                    //if (ManagerNoStatus)
+                    //{
+                    //    status = "No Status";
+                    //}
                     status = status.TrimEnd(' ').TrimEnd(',');
 
                     vehicle.TitleStatus = status;
                     if (titleDue != null)
                     {
-                        vehicle.TitleUpdatedDate = titleDue.UpdateDate;
-                        vehicle.TitleUpdatedUser = titleDue.UpdateUser;
+                        vehicle.TitleUpdatedDate = titleDue.UpdatedDate;
+                        vehicle.TitleUpdatedUser = titleDue.UpdatedBy;
                     }
 
                 }
